@@ -11,3 +11,5 @@ server/cordova/README.md
 server/cordova/.bithoundrc
 server/cordova/www/js/build.js
 server/cordova/www/www.zip
+server/cordova/package.json
+server/cordova/node_modules
