@@ -1,0 +1,13 @@
+/node_modules
+package-lock.json
+/logs
+/db
+/server/cordova/hooks
+server/cordova/platforms
+server/cordova/plugins
+server/public/dist
+server/cordova/CONTRIBUTING.md
+server/cordova/README.md
+server/cordova/.bithoundrc
+server/cordova/www/js/build.js
+server/cordova/www/www.zip
