@@ -1,17 +1,18 @@
 import homePage from '../components/homePage.vue';
-import frst from '../components/frst.vue';
-import scnd from '../components/scnd.vue';
-console.log('qwert');
+import trade from '../components/trade.vue';
+import login from '../components/login.vue';
+
+
 export default [{
     path: '/',
     component: homePage,
 },
 {
-    path: '/frst/',
-    component: frst,
+    path: '/trade',
+    component: trade,
 },
 {
-    path: '/scnd',
-    component: scnd,
+    path: '/login',
+    component: login,
 }
 ];
