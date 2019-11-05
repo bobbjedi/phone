@@ -1,8 +1,14 @@
     <template>
         <div>
-        <f7-button fill @click="openChar">Открыть График {{pairName}}</f7-button>
-            Стакан и терминал SELL/BUY (как бинанс примерно)
-            Список открытых ордеров пары
+            <h3 style="text-align: center">Terminal {{pairName}}</h3>
+            <u @click="openChar">Открыть График {{pairName}}</u>
+            <div class="terminal">
+                 <span class="txt-yellow">BTC: 0.12123  BIP: 1099.121254</span>
+                <div class="left-parth">
+                    <sell-buy :pair-name="pairName"></sell-buy>
+                    <open-orders :pair-name="pairName"></open-orders>
+                </div>
+            </div>
             <f7-popup class="char-popup-swipe" swipe-to-close :opened="isOpenChar" @popup:closed="isOpenChar = false">
                 <f7-page>
                     <f7-navbar :title="'График ' + pairName">
@@ -23,7 +29,14 @@
 <script>
 import ApexCharts from 'ApexCharts';
 window.ApexCharts = ApexCharts;
+import sellBuy from './terminal/sellBuy.vue';
+import openOrders from './terminal/openOrders.vue';
+
 export default {
+    components:{
+        sellBuy,
+        openOrders
+    },
     data() {
         return {
             isOpenChar: false

@@ -1,0 +1,72 @@
+.buts {
+    display: flex;
+    justify-content: space-around;
+}
+
+.but {
+    font-weight: 100;
+    cursor: pointer;
+    color: white;
+    padding: 4px 0;
+    width: 91px;
+    text-align: center;
+    margin: 1px auto;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+}
+
+.hovered {
+    opacity: 0.8;
+    transition: .3s;
+    cursor: pointer;
+}
+
+.hovered:hover {
+    opacity: 1;
+}
+
+.hovered:active {
+    background-color: #5c98bb
+}
+
+.bg-grey {
+    background-color: #323141;
+}
+
+.bg-green {
+    background-color: #5fae6a;
+}
+
+.bg-red {
+    background-color: #e76d6a;
+}
+
+.bg-yellow {
+    background-color: #fcb51e;
+}
+
+.bg-blue {
+    background-color: #0e2e41;
+}
+
+.txt-grey {
+    color: #323141;
+}
+
+.txt-green {
+    color: #5fae6a;
+}
+
+.txt-red {
+    color: #e76d6a;
+}
+
+.txt-yellow {
+    color: #fcb51e;
+}
+
+.txt-blue {
+    color: #0e2e41;
+}

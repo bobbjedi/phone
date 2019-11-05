@@ -1,0 +1,59 @@
+.left-parth{
+    width: 50%;
+}
+/* TERMINAL */
+.terminall-sell-buy{
+    font-size: 0.9em;
+    display: inline-block;
+}
+
+.terminal-input .label{
+    margin-left: 5px;
+    font-size: 0.9em;
+    color: white;
+}
+.custom-input{
+    display: flex;
+    height: 30px;
+    margin: 0px 0px 5px;
+}
+.custom-input input{
+    text-align: center;
+    background: #202833;
+    font-size: 1.2em;
+    width: calc(100% - 65px);
+}
+.input-sign{
+    text-align: center;
+    line-height: 1;
+    font-size: 25px;
+    margin: 0 1px;
+    width: 30px;
+    height: 30px;
+    align-content: center;
+    background: #283545;
+}
+
+.percenage{
+    display: flex;
+    justify-content: space-around;
+}
+.el-percent{
+    text-align: center;
+    padding: 2px 0;
+    border: 1px solid #293036;
+    width: calc(25% - 5px);
+    display: inline-block;
+}
+
+.terminall-sell-buy .but{
+    width: 48%;
+    margin: 5px 0;
+    font-size: 1.2em;
+}
+
+/* OPEN ORDERS */
+.open-orders table{
+    width: 100%;
+}
+
