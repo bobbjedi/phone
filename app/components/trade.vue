@@ -30,7 +30,7 @@
 
 <script>
 
-import pairTerminal from './pairTerminal.vue';
+// import pairTerminal from './pairTerminal.vue';
 import config from '../../config';
 
 export default {
@@ -40,7 +40,7 @@ export default {
         }
     },
     components:{
-        pairTerminal
+        // pairTerminal
     }
 }
 </script>
