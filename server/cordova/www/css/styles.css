@@ -55,5 +55,25 @@
 /* OPEN ORDERS */
 .open-orders table{
     width: 100%;
+    color: rgb(230, 227, 227);
 }
 
+/* INFO PAGE */
+
+#info-trading-pairs table{
+    font-size: 0.9em;
+    width: 100%;
+    color: white;
+}
+#info-trading-pairs table td{
+    padding: 3px 0px;
+}
+#main-slider{
+    height: 200px;
+}
+#main-slider .slide{
+    display: flex;
+    width: 330px;
+    align-items: center;
+    justify-content: center;
+}

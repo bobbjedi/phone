@@ -9,7 +9,7 @@
           </div>
       </div>
       <div class="terminal-input">
-          <div class="label">Amount {{altCoin}}</div>
+          <div class="label">Amount {{altCoin}} <span class="txt-yellow">0.12123</span></div>
           <div class="custom-input">
               <div class="input-sign hovered txt-red" @click="altAmount--">-</div>
                 <input type="number" v-model.number="altAmount">
@@ -17,7 +17,7 @@
           </div>
       </div>
        <div class="terminal-input">
-          <div class="label">Amount {{baseCoin}}</div>
+          <div class="label">Amount {{baseCoin}} <span class="txt-yellow">0.12123</span></div>
           <div class="custom-input">
               <div class="input-sign hovered txt-red" @click="baseAmount--">-</div>
                 <input type="number" v-model.number="baseAmount">
@@ -38,19 +38,23 @@
 </template>
 
 <script>
+import Store from '../../core/Store';
+
 export default {
-    props: ['pairName'],
     data() {
         return {
             baseCoin: '',
             altCoin: '',
             baseAmount: 0,
             altAmount: 0,
-            price: 0
+            price: 0,
         }
     },
     created() {
         [this.baseCoin, this.altCoin] = this.pairName.split('_');
+    },
+    computed: {
+        pairName:()=> Store.terminalPair
     }
 
 }

@@ -1,4 +1,18 @@
-const {usersDb, txsDb} = require('../modules/DB');
+const {usersDb, storeDb} = require('../modules/DB');
 const config = require('../helpers/configReader');
-const Store = module.exports = {
+const $u = require('./utils');
+const _ = require('underscore');
+
+module.exports = {
+    games: [],
+    async init(){
+        let system = await storeDb.findOne({});
+        if (!system){
+            system = new storeDb({});
+        }
+        system.save();
+        this.system = system;
+    }
 };
+
+module.exports.init();

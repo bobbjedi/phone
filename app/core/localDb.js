@@ -1,11 +1,7 @@
-import Datastore from './modules/nedb';
+// import Datastore from './modules/nedb';
+import './modules/nedb';
+const Datastore = window.Nedb;
 import {syncNedb, modelDb} from './modules/modelNeDb';
-
-
-// export default syncNedb(new Datastore({
-//     filename: 'db/items',
-//     autoload: true
-// }));
 
 export default modelDb(syncNedb(new Datastore({
     filename: 'db/itemsDb',

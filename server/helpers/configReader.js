@@ -4,4 +4,5 @@ const configJson = fs.readFileSync(__dirname + '/../../config.js')
     .replace('export default', '')
     .replace(';', '');
 const config = eval('(' + configJson + ')');
+
 module.exports = config;

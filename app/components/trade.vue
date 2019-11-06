@@ -5,35 +5,40 @@
                 <f7-button raised panel-open="left">Menu</f7-button>
             </f7-nav-right>
         </f7-navbar>
-        <f7-toolbar tabbar bottom>
-            <f7-link tab-link="#tab-1" tab-link-active>BTC/BIP</f7-link>
-            <f7-link tab-link="#tab-2">ETH/BIP</f7-link>
-            <f7-link tab-link="#tab-3">USDT/BIP</f7-link>
-        </f7-toolbar>
-        <f7-tabs swipeable animated>
-            <f7-tab id="tab-1" class="page-content" tab-active>
-                <f7-block>
-                   <pair-terminal pair-name="BTC_BIP"></pair-terminal>
-                </f7-block>
-            </f7-tab>
-            <f7-tab id="tab-2" class="page-content">
-                <f7-block>
-                   <pair-terminal pair-name="ETH_BIP"></pair-terminal>
-                </f7-block>
-            </f7-tab>
-            <f7-tab id="tab-3" class="page-content">
-                <f7-block>
-                     <pair-terminal pair-name="USDT_BIP"></pair-terminal>
-                </f7-block>
-            </f7-tab>
-        </f7-tabs>
+        <br>
+        <div id="info-trading-pairs">
+            <f7-block-title>Traiding pairs</f7-block-title>
+            <f7-block>
+                <table>
+                    <tr>
+                        <td>Pair</td>
+                        <td>Last price</td>
+                        <td>Volume 24</td>
+                        <td>Change</td>
+                    </tr>
+                    <tr v-for="p in tradePairs" :key="p" class="hovered">
+                        <td>{{p.replace('_', '/')}}</td>
+                        <td :class="'txt-' + (Math.random() > 0.5 ? 'green' : 'red')">0.2345454</td>
+                        <td>323445 {{p.split('_')[0]}}</td>
+                        <td :class="'bg-' + (Math.random() > 0.5 ? 'green' : 'red') + ' txt-center'">3.5</td>
+                    </tr>
+                </table>
+            </f7-block>
+        </div>
     </f7-page>
 </template>
 
 <script>
 
 import pairTerminal from './pairTerminal.vue';
+import config from '../../config';
+
 export default {
+    data(){
+        return {
+            tradePairs: config.tradePairs
+        }
+    },
     components:{
         pairTerminal
     }

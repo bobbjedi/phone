@@ -48,6 +48,17 @@ module.exports = {
                 });
             });
         };
+        db.__proto__.syncRemove = async function (a, b, c = {}) {
+            return new Promise(resolve => {
+                this.remove(a, b, c, (err, res) => {
+                    if (err) {
+                        resolve(false);
+                    } else {
+                        resolve(res);
+                    }
+                });
+            });
+        };
 
         if (compact) {
             db.persistence.setAutocompactionInterval(compact * 1000 * 60);
@@ -56,8 +67,11 @@ module.exports = {
     },
     modelDb (db) {
         return class {
-            constructor (data = {}) {
+            constructor (data = {}, isSave) {
                 Object.assign(this, data);
+                if (isSave){
+                    this.save();
+                }
             }
             static get db () {
                 return db;
@@ -95,6 +109,16 @@ module.exports = {
                     await this.save();
                 }
             }
+            async remove () {
+                return new Promise(resolve => {
+                    db.remove({_id: this._id}, (err, doc)=>{
+                        if (err){
+                            resolve(false);
+                        }
+                        resolve(true);
+                    });
+                });
+            }
             save () {
                 return new Promise(resolve => {
                     if (!this._id){
@@ -111,7 +135,6 @@ module.exports = {
                             }
                         });
                     }
-                  
                 });
             }
         };

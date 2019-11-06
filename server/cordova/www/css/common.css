@@ -28,7 +28,7 @@
 }
 
 .hovered:active {
-    background-color: #5c98bb
+    background-color: #5c98bb !important;
 }
 
 .bg-grey {
@@ -69,4 +69,8 @@
 
 .txt-blue {
     color: #0e2e41;
+}
+
+.txt-center{
+    text-align: center;
 }

@@ -37,8 +37,11 @@
 </template>
 
 <script>
-    export default {
-        props: ['pairName'],
-        // data:{}
+import Store from '../../core/Store';
+
+export default {
+    computed: {
+        pairName: () => Store.terminalPair
     }
+}
 </script>

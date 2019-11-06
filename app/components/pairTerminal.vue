@@ -1,9 +1,7 @@
     <template>
         <div>
-            <h3 style="text-align: center">Terminal {{pairName}}</h3>
             <u @click="openChar">Открыть График {{pairName}}</u>
             <div class="terminal">
-                 <span class="txt-yellow">BTC: 0.12123  BIP: 1099.121254</span>
                 <div class="left-parth">
                     <sell-buy :pair-name="pairName"></sell-buy>
                     <open-orders :pair-name="pairName"></open-orders>
