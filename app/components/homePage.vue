@@ -47,6 +47,7 @@
                             <sell-buy></sell-buy>
                             <open-orders></open-orders>
                         </div>
+                        <depth></depth>
                     </div>
                 </f7-block>
             </f7-page>
@@ -61,6 +62,7 @@ import config from '../../config';
 import Store from '../core/Store';
 import sellBuy from './terminal/sellBuy.vue';
 import openOrders from './terminal/openOrders.vue';
+import depth from './terminal/depth.vue';
 
 export default {
     data(){
@@ -72,7 +74,8 @@ export default {
     },
     components:{
         sellBuy,
-        openOrders
+        openOrders,
+        depth
     },
     watch: {
         async '$f7router.currentRoute.url'(v) {

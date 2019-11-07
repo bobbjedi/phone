@@ -1,7 +1,11 @@
 .left-parth{
-    width: 50%;
+    width: 49%;
 }
 /* TERMINAL */
+.terminal{
+    display: flex;
+    justify-content: space-between;
+}
 .terminall-sell-buy{
     font-size: 0.9em;
     display: inline-block;
@@ -76,4 +80,35 @@
     width: 330px;
     align-items: center;
     justify-content: center;
+}
+
+
+/* DEPTH */
+#depth{
+    font-size: 0.9em;
+    width: 49%;
+}
+.depth-header{
+    display: flex;
+    justify-content: space-between;
+}
+.price-line{
+    padding: 1px 5px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1px;
+    /* background: linear-gradient(to left, #FFDDD6 20%, #FFF9ED 20%, #FFF9ED 80%); */
+}
+
+.price-line .value{
+    color: white;
+}
+
+.last-price{
+    text-align: center;
+    border-bottom: 1px dotted grey;
+    border-top: 1px dotted grey;
+    font-size: 1.1em;
+    margin: 4px auto;
+    padding: 2px;
 }
