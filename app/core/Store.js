@@ -42,7 +42,7 @@ export default new Vue({
         isOpenTerminal: false,
         public: {},
         publicPairsData: {}, // хранятся подробные данные по парам
-        ordersData: {} // хранятся данные по парам
+        ordersData: {} // хранятся данные по ордерам пар
     },
     methods: {
         updateUser() {
@@ -80,7 +80,8 @@ export default new Vue({
                 password: '',
                 login: '',
                 address: '',
-                token: false
+                token: false,
+                deposits: {}
             };
         },
     },

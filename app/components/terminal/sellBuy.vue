@@ -1,5 +1,6 @@
 <template>
-    <div class="terminall-sell-buy" v-if="deposits">
+    <div class="terminall-sell-buy" v-if="pending && pending.altCoin >=0">
+        {{pending}}
       <div class="terminal-input">
           <div class="label">Price {{pairName}}</div>
           <div class="custom-input">
@@ -9,7 +10,7 @@
           </div>
       </div>
       <div class="terminal-input">
-          <div class="label">{{altCoin}} Amount: <span class="txt-yellow">{{altAmount}}</span> / Balance: {{deposits[altCoin].balance}}</div>
+          <div class="label">{{altCoin}} Amount: <span class="txt-yellow">{{altAmount}}</span> / Balance: {{deposits[altCoin].balance - pending.altCoin}}</div>
           <div class="custom-input">
               <div class="input-sign hovered txt-red" @click="altAmount--">-</div>
                 <input type="number" v-model.number="altAmount">
@@ -17,7 +18,7 @@
           </div>
       </div>
        <div class="terminal-input">
-          <div class="label">{{baseCoin}} Amt: <span class="txt-yellow big"> {{baseAmount}}</span> / Bal: {{deposits[baseCoin].balance}}</div>
+          <div class="label">{{baseCoin}} Amt: <span class="txt-yellow big"> {{baseAmount}}</span> / Bal: {{deposits[baseCoin].balance - pending.baseCoin}}</div>
           <!-- <div class="custom-input"> -->
               <!-- <div class="input-sign hovered txt-red" @click="baseAmount--">-</div> -->
                 <!-- <input type="number" v-model.number="baseAmount"> -->
@@ -62,7 +63,25 @@ export default {
             [this.baseCoin, this.altCoin] = Store.terminalPair.split('_');
             return Store.terminalPair
         },
-        deposits: ()=> Store.user.deposits || {}
+        deposits: ()=> Store.user.deposits || {},
+        // Заморозка в ордерах
+        pending(){
+            const data = Store.ordersData[this.pairName];
+            let altCoin = 0;
+            let baseCoin = 0;
+            if(data){
+                 console.log(data.openOrders);
+                data.openOrders.forEach(o=>{
+                    console.log('o_>', o)
+                 if(o.type === 'sell'){
+                    altCoin += o.amount; 
+                    } else {
+                        baseCoin += o.baseCoinAmount;
+                    }
+                });
+            }
+            return {baseCoin, altCoin};
+        }
     },
     methods: {
         /**

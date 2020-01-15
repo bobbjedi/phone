@@ -100,7 +100,6 @@ module.exports = (app) => {
                 // Данные по коинам
             case ('pairData'):
                 const depthPairName = depth[GET.pairName];
-                console.log(depthPairName.lastPrice)
                 success({depth: depthPairName.depth, prices: depthPairName.prices, lastPrice: depthPairName.lastPrice}, res);
                 break;
 
