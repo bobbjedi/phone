@@ -50,7 +50,8 @@ export default new Vue({
             const self = this;
             api({
                 action: 'getUser',
-                token: this.user.token
+                token: this.user.token,
+                data: {pairNameFull: this.terminalPair}
             }, (data) => {
                 self.user = data;
             }, true);
@@ -59,19 +60,8 @@ export default new Vue({
             api({
                 action: 'getPublic'
             }, (data) => {
-                console.log('getPublic', data)
                 this.public = data;
             }, true, 'public');
-        },
-        updateOrdersData(opts){
-            api({
-                action: 'getFullUserData',
-                data: opts
-            }, data => {
-                const pairName = opts.openOrders || opts.closeOrders;
-                Vue.set(this.ordersData, pairName, {openOrders: data.openOrders[pairName]});
-                // closeOrders: data.closeOrders[pairName]
-            });
         },
         logOut(){
             this.user = {

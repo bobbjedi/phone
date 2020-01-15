@@ -19,8 +19,9 @@ module.exports = {
             return;
         }
         // TODO: В отлельные методы утилиты
+        user.openOrders = {};
+        user.closeOrders = {};
         if (openOrders){
-            user.openOrders = {};
             user.openOrders[openOrders] = await DB[openOrders + '_Depth'].db.syncFind({user_id: user._id});
             const [baseCoin, altCoin] = openOrders.split('_');
             const {deposits} = user;
@@ -33,7 +34,6 @@ module.exports = {
             });
         };
         if (closeOrders){
-            user.closeOrders = {};
             user.closeOrders[closeOrders] = await DB[closeOrders + '_CloseOrders'].db.syncFind({user_id: user._id});
         };
         return user;

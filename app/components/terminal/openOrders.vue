@@ -8,7 +8,7 @@
                 <td></td>
             </tr>
             <tr
-            v-for="o in pairData.openOrders" 
+            v-for="o in pairData" 
             :key="o._id" 
             :class="'txt-' + (o.type === 'sell' ? 'red' : 'green')">
                 <td>{{o.price}}</td>
@@ -27,8 +27,7 @@ export default {
     computed: {
         pairName: () => Store.terminalPair,
         pairData(){
-            console.log(Store.ordersData);
-            return Store.ordersData[this.pairName] || {};
+            return Store.user.openOrders[this.pairName] || {};
         }
     },
     methods:{
@@ -37,7 +36,7 @@ export default {
                 action: 'removeOrder',
                 data: {orderId, pairName: this.pairName}
             }, ()=>{
-                Store.updateOrdersData({openOrders: this.pairName});
+                Store.updateUser();
                 Store.notify({type: 'success', text: 'Ордер успешно удален!'});
                 Store.getPairData();
             });

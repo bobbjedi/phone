@@ -102,7 +102,7 @@ export default {
             Store.terminalPair = pairName;
             this.isLoadedPairData = false;
             this.getPairData();
-            Store.updateOrdersData({openOrders: pairName, closeOrders: pairName});
+            Store.updateUser();
         },
         getPairData(){
             if(!this.isOpenTerminal){

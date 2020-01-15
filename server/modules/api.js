@@ -13,7 +13,7 @@ module.exports = (app) => {
         try {
             const action = req.query.action;
             const GET = JSON.parse(await ed.d(req.query.data));
-            const User = await $u.getUserFromQ({token: GET.token});
+            const User = await $u.getUserFromQ({token: GET.token}, {openOrders: GET.pairNameFull});
             // роуты
             switch (action) {
             case ('getUser'):
@@ -55,24 +55,6 @@ module.exports = (app) => {
                 success(await assignUser(newUser), res);
                 break;
 
-                // ++++++++++++++TESTTTT
-                // case ('all'):
-                //     success(await allData(), res);
-                //     break;
-
-                // case ('reset'):
-                //     (await usersDb.find({})).forEach(u=>{
-                //         // u.deposits.BTC.pending = 0;
-                //         // u.deposits.BIP.pending = 0;
-                //         u.deposits.BTC.balance = 1000;
-                //         u.deposits.BIP.balance = 1000;
-                //         u.save();
-                //     });
-                //     require('./DB').BTC_BIP_Depth.db.remove({}, {multi: true});
-                //     require('./DB').BTC_BIP_CloseOrders.db.remove({}, {multi: true});
-                //     setTimeout(()=>{
-                //         success({}, res);
-                //     }, 200);
                 break;
 
                 // ------------ TESTT
@@ -80,7 +62,7 @@ module.exports = (app) => {
 
             case ('getFullUserData'):
                 const fullUser = await $u.getUserFromQ({_id: User._id}, GET);
-                success({openOrders: fullUser.openOrders, closeOrders: fullUser.closeOrders}, res);
+                success({openOrders: fullUser.openOrders, closeOrders: fullUser.closeOrders, deposits: fullUser.deposits}, res);
                 break;
                 
             case ('setOrder'):
