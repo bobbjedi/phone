@@ -13,10 +13,14 @@
                 <f7-swiper-slide class="slide">Slide 3</f7-swiper-slide>
             </f7-swiper>
         </f7-block>
+
+
+        <!-- СПИСОК ПАР -->
+
         <div id="info-trading-pairs">
             <f7-block-title>Traiding pairs</f7-block-title>
             <f7-block>
-                <table>
+                <table v-if="publicData.pairsData">
                     <tr>
                         <td>Pair</td>
                         <td>Last price</td>
@@ -33,6 +37,10 @@
                 </table>
             </f7-block>
         </div>
+
+
+
+                <!-- Терминал -->
         <f7-popup class="char-popup-swipe" swipe-to-close :opened="isOpenTerminal"
             @popup:closed="isOpenTerminal = false">
             <f7-page>
@@ -52,6 +60,9 @@
                 </f7-block>
             </f7-page>
         </f7-popup>
+
+
+
     </f7-page>
 </template>
 

@@ -9,8 +9,6 @@ export default new Vue({
         this.user.token = localStorage.getItem('wstoken') || false;
         if (this.user.token) {
             this.updateUser();
-        } else {
-            this.isLoad = true;
         }
         this.notify = (obj)=>{
             obj.group = 'foo';
@@ -31,6 +29,10 @@ export default new Vue({
             this.updatePublic();
             this.getPairData();
         }, 10000);
+
+        setTimeout(() => {
+            this.isLoad = true;
+        }, 2000);
     },
     data: {
         currentRoute: '/',
@@ -46,7 +48,6 @@ export default new Vue({
     },
     methods: {
         updateUser() {
-            this.isLoad = true;
             const self = this;
             api({
                 action: 'getUser',
