@@ -78,7 +78,11 @@ module.exports = (app) => {
                 // ------------ TESTT
 
 
-
+            case ('getFullUserData'):
+                const fullUser = await $u.getUserFromQ({_id: User._id}, GET);
+                success({openOrders: fullUser.openOrders, closeOrders: fullUser.closeOrders}, res);
+                break;
+                
             case ('setOrder'):
                 const errorSetOrder = await depth[GET.pairName].setOrder({type: GET.type, amount: GET.value, price: GET.price, user: User});
                 if (errorSetOrder){
@@ -93,11 +97,11 @@ module.exports = (app) => {
                 success({resRemoveOrder}, res);
                 break;
 
-
                 // Данные по коинам
             case ('pairData'):
                 const depthPairName = depth[GET.pairName];
-                success({depth: depthPairName.depth, prices: depthPairName.prices}, res);
+                console.log(depthPairName.lastPrice)
+                success({depth: depthPairName.depth, prices: depthPairName.prices, lastPrice: depthPairName.lastPrice}, res);
                 break;
 
             default:
@@ -111,7 +115,7 @@ module.exports = (app) => {
         }
     });
     app.get('/public', async (req, res) => {
-        publicApi(req, res);
+        publicApi(req, res, success);
     });
 };
 

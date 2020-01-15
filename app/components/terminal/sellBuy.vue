@@ -1,5 +1,5 @@
 <template>
-    <div class="terminall-sell-buy">
+    <div class="terminall-sell-buy" v-if="deposits">
       <div class="terminal-input">
           <div class="label">Price {{pairName}}</div>
           <div class="custom-input">
@@ -9,7 +9,7 @@
           </div>
       </div>
       <div class="terminal-input">
-          <div class="label">Amount {{altCoin}} <span class="txt-yellow">0.12123</span></div>
+          <div class="label">{{altCoin}} Amount: <span class="txt-yellow">{{altAmount}}</span> / Balance: {{deposits[altCoin].balance}}</div>
           <div class="custom-input">
               <div class="input-sign hovered txt-red" @click="altAmount--">-</div>
                 <input type="number" v-model.number="altAmount">
@@ -17,7 +17,7 @@
           </div>
       </div>
        <div class="terminal-input">
-          <div class="label">Amount {{baseCoin}} <span class="txt-yellow big"> {{baseAmount}}</span></div>
+          <div class="label">{{baseCoin}} Amt: <span class="txt-yellow big"> {{baseAmount}}</span> / Bal: {{deposits[baseCoin].balance}}</div>
           <!-- <div class="custom-input"> -->
               <!-- <div class="input-sign hovered txt-red" @click="baseAmount--">-</div> -->
                 <!-- <input type="number" v-model.number="baseAmount"> -->
@@ -52,6 +52,7 @@ export default {
         }
     },
     mounted() {
+        Store.setPrice = p => this.price = p;
     },
     computed: {
         baseAmount(){
@@ -60,7 +61,8 @@ export default {
         pairName() {
             [this.baseCoin, this.altCoin] = Store.terminalPair.split('_');
             return Store.terminalPair
-        }
+        },
+        deposits: ()=> Store.user.deposits || {}
     },
     methods: {
         /**
@@ -75,9 +77,13 @@ export default {
                     value: this.altAmount,
                     type
                 }
-            }, Store.getPairData);
+            }, ()=>{
+                Store.updateOrdersData({openOrders: this.pairName, closeOrders: this.pairName});
+                Store.updateUser();
+                Store.getPairData();
+                Store.notify({type: 'success', text: 'Ордер успешно поставлен!'});
+            });
         }
     }
-
 }
 </script>

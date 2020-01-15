@@ -26,8 +26,8 @@
                     <div></div>
                     <tr v-for="p in tradePairs" @click="openTerminal(p)" :key="p" class="hovered">
                         <td>{{p.replace('_', '/')}}</td>
-                        <td :class="'txt-' + (Math.random() > 0.5 ? 'green' : 'red')">0.2345454</td>
-                        <td>323445 {{p.split('_')[0]}}</td>
+                        <td :class="'txt-' + (publicData.pairsData[p].lastPrice.type === 'buy' ? 'green' : 'red')">{{publicData.pairsData[p].lastPrice.price}}</td>
+                        <td>000000 {{p.split('_')[0]}}</td>
                         <td :class="'bg-' + (Math.random() > 0.5 ? 'green' : 'red') + ' txt-center'">3.5</td>
                     </tr>
                 </table>
@@ -92,6 +92,7 @@ export default {
         Store.getPairData = ()=> this.getPairData();
     },
     computed: {
+         publicData:()=> Store.public,
          terminalPair:()=> Store.terminalPair
     },
     methods: {
@@ -101,6 +102,7 @@ export default {
             Store.terminalPair = pairName;
             this.isLoadedPairData = false;
             this.getPairData();
+            Store.updateOrdersData({openOrders: pairName, closeOrders: pairName});
         },
         getPairData(){
             if(!this.isOpenTerminal){

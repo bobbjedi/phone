@@ -19,6 +19,7 @@ module.exports = class {
         depths[this.pairName] = this;
         this.ordersDb = DB[this.pairName + '_Depth'];
         this.closeOrdersDb = DB[this.pairName + '_CloseOrders'];
+        this.lastPrice = {};
         this.updatePrices();
     }
     async getOrders(type) {
@@ -48,14 +49,19 @@ module.exports = class {
         this.prices.sell = prices.sell;
         this.prices.buy = prices.buy;
         this.depth = depth;
+        if (!this.lastPrice.price){
+            this.lastPrice.price = prices.sell[0] || prices.buy[prices.buy.length - 1] || 0;
+            this.lastPrice.type = 'buy';
+        }
         console.log('UPDATE', {depth, prices});
     }
     /**
      * @param {Object} order {user, amount, price}
      */
     async setOrder(order) {
-        const {price, value, user} = order;
-        if (price <= 0 || value <= 0){
+        const {price, amount, user} = order;
+        console.log({price, amount});
+        if (price <= 0 || amount <= 0){
             return 'No valid order data!';
         } 
         // const user = order.user;//
@@ -146,6 +152,7 @@ module.exports = class {
                         await this.userSellCoin(taker, currentAmount, baseCoinAmount, currentPrice);
                         await this.userBuyCoin(maker, currentAmount, baseCoinAmount, currentPrice, true);
                     }
+                    this.lastPrice = {type, price: currentPrice};
                 }
                 await this.updatePrices();
                 currentPrice = this.prices[opposite][0]; // очередная цена
@@ -172,6 +179,7 @@ module.exports = class {
             type: 'sell'
         });
         await seller.save();
+        // isMaker && (this.lastPrice = {type: 'sell', price});
         return true;
     }
 
@@ -190,6 +198,7 @@ module.exports = class {
             type: 'buy'
         });
         await buyer.save();
+        // isMaker && (this.lastPrice = {type: 'buy', price});
         return true;
     }
     async setMakerOrder(user, type, price, amount){

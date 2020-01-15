@@ -112,3 +112,7 @@
     margin: 4px auto;
     padding: 2px;
 }
+
+.vue-notification-group{
+    z-index: 1000000000000000 !important;
+}

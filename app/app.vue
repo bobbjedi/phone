@@ -1,4 +1,5 @@
 <template>
+<span>
     <!-- Main Framework7 App component where we pass Framework7 params -->
     <f7-app :params="f7params" theme-dark>
         <!-- в main ретдерится из routes.js -->
@@ -22,8 +23,9 @@
         </f7-panel>
         <!-- КОНЕЦ ЛЕВОЕ МЕНЮ -->
         <!-- <modal></modal> -->
-        <notifications group="foo" />
     </f7-app>
+    <notifications group="foo" />
+</span>
 </template>
 
 <script>

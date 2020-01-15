@@ -7,30 +7,13 @@
                 <td>Amount</td>
                 <td></td>
             </tr>
-            <tr class="txt-red">
-                <td>0.101289</td>
-                <td>2.234</td>
-                <td class="txt-red hovered">&#10006;</td>
-            </tr>
-            <tr class="txt-red">
-                <td>0.324101</td>
-                <td>2.235674</td>
-                <td class="txt-red hovered">&#10006;</td>
-            </tr>
-            <tr class="txt-green">
-                <td>0.34401</td>
-                <td>2.2455434</td>
-                <td class="txt-red hovered">&#10006;</td>
-            </tr>
-            <tr class="txt-red">
-                <td>0.234101</td>
-                <td>2.8566525</td>
-                <td class="txt-red hovered">&#10006;</td>
-            </tr>
-            <tr class="txt-green">
-                <td>0.34401</td>
-                <td>2.234</td>
-                <td class="txt-red hovered ">&#10006;</td>
+            <tr
+            v-for="o in pairData.openOrders" 
+            :key="o._id" 
+            :class="'txt-' + (o.type === 'sell' ? 'red' : 'green')">
+                <td>{{o.price}}</td>
+                <td>{{o.amount}}</td>
+                <td class="txt-red hovered" @click="closeOrder(o._id)">&#10006;</td>
             </tr>
         </table>
     </div>
@@ -38,13 +21,27 @@
 
 <script>
 import Store from '../../core/Store';
+import api from '../../core/api';
 
 export default {
     computed: {
         pairName: () => Store.terminalPair,
-        // pairData(){
-        //     return Store.publicPairsData[this.pairName] || {};
-        // }
+        pairData(){
+            console.log(Store.ordersData);
+            return Store.ordersData[this.pairName] || {};
+        }
+    },
+    methods:{
+        closeOrder(orderId){
+             api({
+                action: 'removeOrder',
+                data: {orderId, pairName: this.pairName}
+            }, ()=>{
+                Store.updateOrdersData({openOrders: this.pairName});
+                Store.notify({type: 'success', text: 'Ордер успешно удален!'});
+                Store.getPairData();
+            });
+        }
     }
 }
 </script>

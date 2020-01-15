@@ -26,7 +26,11 @@ export default new Vue({
             } 
             this.$notify(obj);
         };
-        setInterval(()=>this.getPairData(), 10000);
+        this.updatePublic();
+        setInterval(()=>{
+            this.updatePublic();
+            this.getPairData();
+        }, 10000);
     },
     data: {
         currentRoute: '/',
@@ -36,19 +40,38 @@ export default new Vue({
         components: {},
         terminalPair: '',
         isOpenTerminal: false,
-        publicPairsData: {} // хранятся данные по парам
+        public: {},
+        publicPairsData: {}, // хранятся подробные данные по парам
+        ordersData: {} // хранятся данные по парам
     },
     methods: {
-        updateUser(opts) {
+        updateUser() {
             this.isLoad = true;
             const self = this;
             api({
                 action: 'getUser',
-                token: this.user.token,
-                data: opts
+                token: this.user.token
             }, (data) => {
                 self.user = data;
             }, true);
+        },
+        updatePublic() {
+            api({
+                action: 'getPublic'
+            }, (data) => {
+                console.log('getPublic', data)
+                this.public = data;
+            }, true, 'public');
+        },
+        updateOrdersData(opts){
+            api({
+                action: 'getFullUserData',
+                data: opts
+            }, data => {
+                const pairName = opts.openOrders || opts.closeOrders;
+                Vue.set(this.ordersData, pairName, {openOrders: data.openOrders[pairName]});
+                // closeOrders: data.closeOrders[pairName]
+            });
         },
         logOut(){
             this.user = {

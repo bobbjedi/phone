@@ -2,9 +2,11 @@ const {usersDb, storeDb} = require('../modules/DB');
 const config = require('../helpers/configReader');
 const $u = require('./utils');
 const _ = require('underscore');
+const depth = require('../modules/depth');
 
 module.exports = {
-    games: [],
+    pairsData: {},
+
     async init(){
         let system = await storeDb.findOne({});
         if (!system){
@@ -12,6 +14,12 @@ module.exports = {
         }
         system.save();
         this.system = system;
+        setInterval(() => this.updatePairsData(), 5000);
+    },
+    updatePairsData(){
+        config.tradePairs.forEach(c=>{
+            this.pairsData[c] = {lastPrice: depth[c].lastPrice};
+        });
     }
 };
 
