@@ -179,7 +179,6 @@ module.exports = class {
             type: 'sell'
         });
         await seller.save();
-        // isMaker && (this.lastPrice = {type: 'sell', price});
         return true;
     }
 
@@ -198,7 +197,6 @@ module.exports = class {
             type: 'buy'
         });
         await buyer.save();
-        // isMaker && (this.lastPrice = {type: 'buy', price});
         return true;
     }
     async setMakerOrder(user, type, price, amount){

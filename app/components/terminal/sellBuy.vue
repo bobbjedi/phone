@@ -1,6 +1,5 @@
 <template>
     <div class="terminall-sell-buy" v-if="pending && pending.altCoin >=0">
-        {{pending}}
       <div class="terminal-input">
           <div class="label">Price {{pairName}}</div>
           <div class="custom-input">
