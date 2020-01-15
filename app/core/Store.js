@@ -26,6 +26,7 @@ export default new Vue({
             } 
             this.$notify(obj);
         };
+        setInterval(()=>this.getPairData(), 10000);
     },
     data: {
         currentRoute: '/',
@@ -33,7 +34,9 @@ export default new Vue({
         globalRouter: {},
         user: {},
         components: {},
-        terminalPair: ''
+        terminalPair: '',
+        isOpenTerminal: false,
+        publicPairsData: {} // хранятся данные по парам
     },
     methods: {
         updateUser(opts) {

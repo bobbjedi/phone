@@ -14,7 +14,7 @@ module.exports = class {
         this.pairName = baseCoin + '_' + altCoin;
         this.isBlocked = false;
         this.queue = []; // очередь
-        this.depth = {buy: {}, sell: {}}; // {10: 234} price: amount 
+        this.depth = {buy: {}, sell: {}}; // {10: 234} -> {price: amount} 
         this.prices = {buy: [], sell: []}; // [10, 13, 16, 17.4]
         depths[this.pairName] = this;
         this.ordersDb = DB[this.pairName + '_Depth'];
@@ -54,6 +54,10 @@ module.exports = class {
      * @param {Object} order {user, amount, price}
      */
     async setOrder(order) {
+        const {price, value, user} = order;
+        if (price <= 0 || value <= 0){
+            return 'No valid order data!';
+        } 
         // const user = order.user;//
         // TODO: проверить валиднось параметров и баланс юзера!
         this.queue.push(order);
@@ -80,9 +84,9 @@ module.exports = class {
             }
             const order = this.queue.shift();
             const result = await this.setOrderInDepth(order);
-            console.log({result});
             this.unBlock();
         } catch (e) {
+            console.log(e);
             this.unBlock();
             log.error('[catch setNextOrder]: ' + e);
         }
@@ -105,7 +109,7 @@ module.exports = class {
         if (!currentPrice || !checkPriceTaker(currentPrice, price)){ // если не тейкер то ставим новый ордер
             return this.setMakerOrder(taker, type, price, amount);
         }
-        console.log('Чистим');
+        console.log('Чистим!!!');
         // ставит чтобы чистить стакан вверх
         let leftAmount = amount;
         // return;
@@ -190,7 +194,6 @@ module.exports = class {
     }
     async setMakerOrder(user, type, price, amount){
         try {
-            const {altCoin, baseCoin} = this;
             amount = $u.round(amount);
             price = $u.round(price);
             let baseCoinAmount = $u.round(amount * price);

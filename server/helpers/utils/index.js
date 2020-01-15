@@ -18,7 +18,7 @@ module.exports = {
         if (!user){
             return;
         }
-
+        // TODO: В отлельные методы утилиты
         if (openOrders){
             user.openOrders = {};
             user.openOrders[openOrders] = await DB[openOrders + '_Depth'].db.syncFind({user_id: user._id});
@@ -53,12 +53,15 @@ module.exports = {
             deposits,
             address: params.address,
             login: params.login,
-            password: sha256(params.password.toString())
+            password: this.createPswd(params.password),
         });
         await user.save();
         if (regDrop){
             depositsDb.db.syncInsert({user_id: user._id, amount: regDrop, type: 'regdrop'});
         }
         return user;
-    }
+    },
+    createPswd(password){
+        return sha256(password.toString());
+    },
 };

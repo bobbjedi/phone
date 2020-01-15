@@ -5,7 +5,7 @@ const $u = require('../helpers/utils');
 const publicApi = require('./publicApi');
 const ed = require('../../common/code_sever');
 const depth = require('./depth');
-const allData = require('./allData');
+// const allData = require('./allData');
 
 module.exports = (app) => {
     app.get('/api', async (req, res) => {
@@ -56,35 +56,50 @@ module.exports = (app) => {
                 break;
 
                 // ++++++++++++++TESTTTT
-            case ('all'):
-                success(await allData(), res);
-                break;
+                // case ('all'):
+                //     success(await allData(), res);
+                //     break;
 
-            case ('reset'):
-                (await usersDb.find({})).forEach(u=>{
-                    // u.deposits.BTC.pending = 0;
-                    // u.deposits.BIP.pending = 0;
-                    u.deposits.BTC.balance = 1000;
-                    u.deposits.BIP.balance = 1000;
-                    u.save();
-                });
-                require('./DB').BTC_BIP_Depth.db.remove({}, {multi: true});
-                require('./DB').BTC_BIP_CloseOrders.db.remove({}, {multi: true});
-                setTimeout(()=>{
-                    success({}, res);
-                }, 200);
+                // case ('reset'):
+                //     (await usersDb.find({})).forEach(u=>{
+                //         // u.deposits.BTC.pending = 0;
+                //         // u.deposits.BIP.pending = 0;
+                //         u.deposits.BTC.balance = 1000;
+                //         u.deposits.BIP.balance = 1000;
+                //         u.save();
+                //     });
+                //     require('./DB').BTC_BIP_Depth.db.remove({}, {multi: true});
+                //     require('./DB').BTC_BIP_CloseOrders.db.remove({}, {multi: true});
+                //     setTimeout(()=>{
+                //         success({}, res);
+                //     }, 200);
                 break;
 
                 // ------------ TESTT
+
+
+
             case ('setOrder'):
-                const resSetOrder = await depth[GET.pairName].setOrder({type: GET.type, amount: GET.value, price: GET.price, user: await $u.getUserFromQ({login: GET.login})});
-                success({resSetOrder}, res);
+                const errorSetOrder = await depth[GET.pairName].setOrder({type: GET.type, amount: GET.value, price: GET.price, user: User});
+                if (errorSetOrder){
+                    error(errorSetOrder, res);
+                } else {
+                    success({}, res); 
+                }
                 break;
 
             case ('removeOrder'):
-                const resRemoveOrder = await depth[GET.pairName].removeOrder({orderId: GET.orderId, user: await $u.getUserFromQ({login: GET.login})});
+                const resRemoveOrder = await depth[GET.pairName].removeOrder({orderId: GET.orderId, user: User});
                 success({resRemoveOrder}, res);
                 break;
+
+
+                // Данные по коинам
+            case ('pairData'):
+                const depthPairName = depth[GET.pairName];
+                success({depth: depthPairName.depth, prices: depthPairName.prices}, res);
+                break;
+
             default:
                 error('error endpoint', res);
                 break;

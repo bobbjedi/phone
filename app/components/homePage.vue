@@ -41,7 +41,7 @@
                         <f7-link popup-close>Close</f7-link>
                     </f7-nav-right>
                 </f7-navbar>
-                <f7-block v-show="isLoadedgPairData">
+                <f7-block v-show="isLoadedPairData">
                     <div class="terminal">
                         <div class="left-parth">
                             <sell-buy></sell-buy>
@@ -58,17 +58,19 @@
 <script>
 
 // import pairTerminal from './pairTerminal.vue';
+import Vue from 'vue';
 import config from '../../config';
 import Store from '../core/Store';
 import sellBuy from './terminal/sellBuy.vue';
 import openOrders from './terminal/openOrders.vue';
 import depth from './terminal/depth.vue';
+import api from '../core/api';
 
 export default {
     data(){
         return {
             isOpenTerminal: false,
-            isLoadedgPairData: false,
+            isLoadedPairData: false,
             tradePairs: config.tradePairs
         }
     },
@@ -80,10 +82,14 @@ export default {
     watch: {
         async '$f7router.currentRoute.url'(v) {
             Store.currentRoute = v;
+        },
+        isOpenTerminal(v){
+            Store.isOpenTerminal = v;
         }
     },
         created(){
         Store.globalRouter = this.$f7router;
+        Store.getPairData = ()=> this.getPairData();
     },
     computed: {
          terminalPair:()=> Store.terminalPair
@@ -93,11 +99,25 @@ export default {
             this.$f7.preloader.show();
             this.isOpenTerminal = true;
             Store.terminalPair = pairName;
-            this.isLoadedgPairData = false;
-            setTimeout(()=>{
-                this.$f7.preloader.hide();
-                this.isLoadedgPairData = true;
-            }, 1000);
+            this.isLoadedPairData = false;
+            this.getPairData();
+        },
+        getPairData(){
+            if(!this.isOpenTerminal){
+                return;
+            }
+            const pairName = Store.terminalPair;
+             api({
+                    action: 'pairData',
+                    data: {pairName}
+                }, data => {
+                    data.prices.sell.reverse();
+                    Vue.set(Store.publicPairsData, pairName, data);
+                    setTimeout(()=>{
+                        this.$f7.preloader.hide();
+                        this.isLoadedPairData = true;
+                 }, 1000);
+            });
         }
     }
 }

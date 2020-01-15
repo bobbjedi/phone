@@ -41,7 +41,10 @@ import Store from '../../core/Store';
 
 export default {
     computed: {
-        pairName: () => Store.terminalPair
+        pairName: () => Store.terminalPair,
+        // pairData(){
+        //     return Store.publicPairsData[this.pairName] || {};
+        // }
     }
 }
 </script>
