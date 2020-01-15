@@ -63,7 +63,7 @@ module.exports = class {
         console.log({price, amount});
         if (price <= 0 || amount <= 0){
             return 'No valid order data!';
-        } 
+        }
         // const user = order.user;//
         // TODO: проверить валиднось параметров и баланс юзера!
         this.queue.push(order);
@@ -99,9 +99,9 @@ module.exports = class {
     }
     async setOrderInDepth(order) {
         const {user, price, amount, type} = order;
-        const taker = await $u.getUserFromQ({_id: user._id});
+        const taker = await $u.getUserFromQ({_id: user._id}, {openOrders: this.pairName});// TODO: получим и пендинги 
         const opposite = type === 'sell' ? 'buy' : 'sell';
-        // TODO: порверить баланс юзера
+        // TODO: порверить баланс юзера с учетом пендинга
         let pricesOpposite = this.prices[opposite];
         let currentPrice = pricesOpposite[0];
         const checkPriceTaker = (depthPrice, orderPrice)=> { //  свой цвет

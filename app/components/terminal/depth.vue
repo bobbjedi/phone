@@ -7,7 +7,7 @@
             <div class="sell-line price-line" 
                  v-for="p in prices.sell"
                  :key="p"
-                 :style="{background: 'linear-gradient(to left, rgb(232, 153, 150) ' + mathPercent(20 * p) + '%, rgba(0,0,0,0) ' + mathPercent(20 * p) + '%, rgba(0,0,0,0) ' + (100 - mathPercent(20 * p)) + '%)'}"
+                 :style="{background: 'linear-gradient(to left, rgb(232, 153, 150) ' + mathPercent(sell[p]) + '%, rgba(0,0,0,0) ' + mathPercent(sell[p]) + '%, rgba(0,0,0,0) ' + (100 - mathPercent(sell[p])) + '%)'}"
                  @click="setPrice(p)"
             >
                 <div class="price txt-red">{{p}}</div>
@@ -18,7 +18,7 @@
         <div class="depth-path depth-buy">
             <div class="sell-line price-line"
                  v-for="p in prices.buy"
-                 :style="{background: 'linear-gradient(to left, rgb(135, 243, 163) ' + mathPercent(20 * p) + '%, rgba(0,0,0,0) ' + mathPercent(20 * p) + '%, rgba(0,0,0,0) ' + (100 - mathPercent(20 * p)) + '%)'}"
+                 :style="{background: 'linear-gradient(to left, rgb(135, 243, 163) ' + mathPercent(buy[p]) + '%, rgba(0,0,0,0) ' + mathPercent(buy[p]) + '%, rgba(0,0,0,0) ' + (100 - mathPercent(buy[p])) + '%)'}"
                  :key="p"
                   @click="setPrice(p)"
                  >
@@ -35,7 +35,7 @@ import Store from '../../core/Store';
 export default {
     data() {
         return {
-            maxValue: 200,
+            maxValue: 0,
             prices: {sell:[], buy:[]},
             sell: {},
             buy: {},
@@ -61,6 +61,10 @@ export default {
             this.sell = data.depth.sell;
             this.buy = data.depth.buy;
             this.lastPrice = data.lastPrice;
+            this.maxValue = 0;
+            this.prices.buy.forEach(p=> this.maxValue = Math.max(this.maxValue, data.depth.buy[p]));
+            this.prices.sell.forEach(p=> this.maxValue = Math.max(this.maxValue, data.depth.sell[p]));
+            console.log(this.maxValue);
         },
          setPrice(p){
              Store.setPrice(p);
