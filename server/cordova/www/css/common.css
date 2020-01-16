@@ -21,6 +21,10 @@
     opacity: 0.8;
     transition: .3s;
     cursor: pointer;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
 }
 
 .hovered:hover {
@@ -85,7 +89,7 @@
 }
 
 .big {
-    font-size: 1.2em;
+    font-size: 1.2em !important;
 }
 
 .bigbig {

@@ -18,7 +18,7 @@
             <div class="small" v-show="user.addresses[coinName]">{{user.addresses[coinName]}}</div>
             <f7-row>
 
-                <f7-col width="85">
+                <f7-col width="80">
                     <span class="big txt-white">{{coinName}}</span>
                     <span v-if="user.addresses[coinName]">
                         &nbsp;Balance:&nbsp; <span class="txt-yellow">{{(user.deposits[coinName].balance - user.deposits[coinName].pending) | format}}
@@ -27,13 +27,13 @@
                         </span>
                     </span>
                 </f7-col>
-                <f7-col width="15">
-                    <span v-if="user.addresses[coinName]">
-                        <i class="fa fa-arrow-circle-down txt-green" aria-hidden="true"></i>&nbsp;
+                <f7-col width="20">
+                    <span v-if="user.addresses[coinName]" class="big">
+                        <i class="fa fa-arrow-circle-down txt-green hovered" aria-hidden="true"></i>&nbsp;
                         <i class="fa fa-arrow-circle-up txt-red" aria-hidden="true"></i>
                     </span>
                     <span v-else>
-                        <i class="fa fa-plus-circle bigbig txt-green" aria-hidden="true"></i>
+                        <i class="fa fa-plus-circle bigbig txt-green hovered" aria-hidden="true"></i>
                     </span>
                 </f7-col>
             </f7-row>
