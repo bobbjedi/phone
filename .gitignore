@@ -2,6 +2,7 @@
 package-lock.json
 /logs
 /db
+/config.js
 /server/cordova/hooks
 server/cordova/platforms
 server/cordova/plugins
