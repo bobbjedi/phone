@@ -64,7 +64,7 @@ module.exports = class {
         if (price <= 0 || amount <= 0){
             return 'No valid order data!';
         }
-        const isNotValid = this.checkValidOrder(order, user);
+        const isNotValid = this.checkValidOrder(order, await $u.getUserFromQ({_id: user._id}, {openOrders: true}));
         if (isNotValid){
             return isNotValid;
         }
