@@ -71,7 +71,6 @@ export default {
             this.maxValue = 0;
             this.prices.buy.forEach(p=> this.maxValue = Math.max(this.maxValue, data.depth.buy[p]));
             this.prices.sell.forEach(p=> this.maxValue = Math.max(this.maxValue, data.depth.sell[p]));
-            console.log(this.maxValue);
         },
          setPrice(p){
              Store.setPrice(p);

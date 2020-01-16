@@ -57,12 +57,14 @@ module.exports = (app) => {
 
                 break;
 
-                // ------------ TESTT
-
-
-            case ('getFullUserData'):
-                const fullUser = await $u.getUserFromQ({_id: User._id}, GET);
-                success({openOrders: fullUser.openOrders, closeOrders: fullUser.closeOrders, deposits: fullUser.deposits}, res);
+            case ('setAddress'):
+                if (User.addresses[GET.coinName]){
+                    log.error('Адрес для этого коина уже добавлен!');
+                    return error('Адрес для этого коина уже добавлен!', res);
+                }
+                User.addresses[GET.coinName] = GET.address;
+                await User.save();
+                success({}, res);
                 break;
                 
             case ('setOrder'):

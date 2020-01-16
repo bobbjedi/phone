@@ -2,8 +2,8 @@
 <div class="terminall-sell-buy">
     <div class="terminal-input">
         <div class="label m5" v-if="pairName.length">
-            {{baseCoin}}:{{(deposits[baseCoin].balance - deposits[baseCoin].pending) | format}} / 
-            {{altCoin}}:{{(deposits[altCoin].balance - deposits[altCoin].pending) | format}}
+            {{baseCoin}}:{{deposits[baseCoin].free | format}} /
+            {{altCoin}}:{{deposits[altCoin].free | format}}
         </div>
         <div class="custom-input">
             <div class="input-sign hovered txt-red" @click="price--">-</div>
@@ -12,7 +12,7 @@
         </div>
     </div>
     <div class="terminal-input">
-        <div class="label">{{altCoin}} <span class="txt-yellow">{{altAmount | format}}</span></div>
+        <div class="label">{{altCoin}} <span class="txt-yellow big">{{altAmount | format}}</span></div>
         <div class="custom-input">
             <div class="input-sign hovered txt-red" @click="altAmount--">-</div>
             <input type="number" v-model.number="altAmount">
@@ -45,6 +45,10 @@
 import Store from '../../core/Store';
 import api from '../../core/api';
 
+// TODO: в конфиг
+const minVol = 0.1;
+const minPrice = 0.1;
+
 export default {
     data() {
         return {
@@ -52,10 +56,14 @@ export default {
             altCoin: '',
             altAmount: 0,
             price: 0,
+            isPairChange: true,
+            isBlockedButtons: false
         }
     },
     mounted() {
         Store.setPrice = p => this.price = p;
+        this.$watch('altAmount', v => this.altAmount = Math.max(minVol, v));
+        this.$watch('price', v => this.price = Math.max(minPrice, v));
     },
     computed: {
         baseAmount() {
@@ -63,6 +71,8 @@ export default {
         },
         pairName() {
             [this.baseCoin, this.altCoin] = Store.terminalPair.split('_');
+            this.altAmount = minVol;
+            this.price = minPrice;
             return Store.terminalPair
         },
         deposits: () => Store.user.deposits || {},
@@ -72,6 +82,11 @@ export default {
          * {type, value, price, pairName}
          */
         setOrder(type) {
+            if (this.isBlockedButtons) {
+                return;
+            }
+            this.$f7.preloader.show();
+            this.isBlockedButtons = true;
             api({
                 action: 'setOrder',
                 data: {
@@ -81,12 +96,16 @@ export default {
                     type
                 }
             }, () => {
-                Store.updateUser();
-                Store.getPairData();
-                Store.notify({
-                    type: 'success',
-                    text: 'Ордер успешно поставлен!'
-                });
+                setTimeout(() => {
+                    Store.updateUser();
+                    Store.getPairData();
+                    Store.notify({
+                        type: 'success',
+                        text: 'Заявка отправлена!'
+                    });
+                    this.$f7.preloader.hide();
+                    this.isBlockedButtons = false;
+                }, 1000);
             });
         }
     }

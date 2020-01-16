@@ -32,13 +32,17 @@ export default {
     },
     methods:{
         closeOrder(orderId){
+             this.$f7.preloader.show();
              api({
                 action: 'removeOrder',
                 data: {orderId, pairName: this.pairName}
             }, ()=>{
                 Store.updateUser();
-                Store.notify({type: 'success', text: 'Ордер успешно удален!'});
                 Store.getPairData();
+                setTimeout(()=>{
+                    Store.notify({type: 'success', text: 'Ордер успешно удален!'});
+                    this.$f7.preloader.hide();
+                }, 500);
             });
         }
     }

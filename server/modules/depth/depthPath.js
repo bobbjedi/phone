@@ -53,7 +53,7 @@ module.exports = class {
             this.lastPrice.price = prices.sell[0] || prices.buy[prices.buy.length - 1] || 0;
             this.lastPrice.type = 'buy';
         }
-        console.log('UPDATE', {depth, prices});
+        // console.log('UPDATE', {depth, prices});
     }
     /**
      * @param {Object} order {user, amount, price}
@@ -98,8 +98,17 @@ module.exports = class {
         }
     }
     async setOrderInDepth(order) {
+        const {altCoin, baseCoin} = this;
         const {user, price, amount, type} = order;
-        const taker = await $u.getUserFromQ({_id: user._id}, {openOrders: this.pairName});// TODO: получим и пендинги 
+        const taker = await $u.getUserFromQ({_id: user._id}, {openOrders: true});// TODO: получим и пендинги 
+        const freeAlt = taker.deposits[altCoin].free;
+        const freeBase = taker.deposits[baseCoin].free;
+        console.log('dposits:', {freeAlt, freeBase});
+        if (type === 'sell' && freeAlt < amount){ // нужно проверить баланс альта
+            return log.error(`Не достаточно альткоина для продажи: [${this.pairName}] ${altCoin}: ${freeAlt}, Am: ${amount}, Prc: ${price} ${user.login}`);
+        } else if (type === 'buy' && freeBase < amount * price) {
+            return log.error(`Не достаточно базового коина для покупки: [${this.pairName}] ${baseCoin}: ${freeBase}, Am: ${amount}, Prc: ${price} ${user.login}`);
+        }
         const opposite = type === 'sell' ? 'buy' : 'sell';
         // TODO: порверить баланс юзера с учетом пендинга
         let pricesOpposite = this.prices[opposite];
@@ -168,8 +177,8 @@ module.exports = class {
     }
     async userSellCoin(seller, amount, baseCoinAmount, price, isMaker){
         const {altCoin, baseCoin} = this;
-        seller.deposits[baseCoin].balance += baseCoinAmount;
-        seller.deposits[altCoin].balance -= amount; // снимаем со счета
+        seller.deposits[baseCoin].balance = $u.round(seller.deposits[baseCoin].balance + baseCoinAmount);
+        seller.deposits[altCoin].balance = $u.round(seller.deposits[altCoin].balance - amount); // снимаем со счета
         this.closeOrdersDb.db.insert({
             user_id: seller._id,
             time: $u.unix(),

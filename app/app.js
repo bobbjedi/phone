@@ -62,5 +62,7 @@ new Vue({
 })();
 
 // setTimeout(()=>{
-//     window.toggleFullScreen();
+//     if (window.innerWidth < window.innerHeight){
+//         window.toggleFullScreen();
+//     }
 // }, 500);

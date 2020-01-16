@@ -94,7 +94,7 @@ export default {
     },
     created() {
         Store.globalRouter = this.$f7router;
-        Store.getPairData = () => this.getPairData();
+        Store.getPairData = cb => this.getPairData(cb);
     },
     computed: {
         publicData: () => Store.public,
@@ -109,7 +109,7 @@ export default {
             this.getPairData();
             Store.updateUser();
         },
-        getPairData() {
+        getPairData(cb) {
             if (!this.isOpenTerminal) {
                 return;
             }
@@ -122,6 +122,7 @@ export default {
             }, data => {
                 data.prices.sell.reverse();
                 Vue.set(Store.publicPairsData, pairName, data);
+                cb && cb();
                 setTimeout(() => {
                     this.$f7.preloader.hide();
                     this.isLoadedPairData = true;

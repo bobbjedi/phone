@@ -35,6 +35,7 @@ module.exports = {
                     }
                 });
             };
+            config.knownCoins.forEach(c=> deposits[c].free = deposits[c].balance - deposits[c].pending);
         };
         if (closeOrders){
             user.closeOrders[closeOrders] = await DB[closeOrders + '_CloseOrders'].db.syncFind({user_id: user._id});
