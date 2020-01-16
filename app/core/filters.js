@@ -15,6 +15,9 @@ Vue.filter('round', v => {
 });
 
 Vue.filter('format', (num)=>{
+    if (!num){
+        num = 0;
+    }
     let fixed = 8;
     if (num > 0.8){
         fixed = 2;
