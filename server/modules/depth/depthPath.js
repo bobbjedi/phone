@@ -64,6 +64,10 @@ module.exports = class {
         if (price <= 0 || amount <= 0){
             return 'No valid order data!';
         }
+        const isNotValid = this.checkValidOrder(order, user);
+        if (isNotValid){
+            return isNotValid;
+        }
         // const user = order.user;//
         // TODO: проверить валиднось параметров и баланс юзера!
         this.queue.push(order);
@@ -98,16 +102,11 @@ module.exports = class {
         }
     }
     async setOrderInDepth(order) {
-        const {altCoin, baseCoin} = this;
         const {user, price, amount, type} = order;
         const taker = await $u.getUserFromQ({_id: user._id}, {openOrders: true});// TODO: получим и пендинги 
-        const freeAlt = taker.deposits[altCoin].free;
-        const freeBase = taker.deposits[baseCoin].free;
-        console.log('dposits:', {freeAlt, freeBase});
-        if (type === 'sell' && freeAlt < amount){ // нужно проверить баланс альта
-            return log.error(`Не достаточно альткоина для продажи: [${this.pairName}] ${altCoin}: ${freeAlt}, Am: ${amount}, Prc: ${price} ${user.login}`);
-        } else if (type === 'buy' && freeBase < amount * price) {
-            return log.error(`Не достаточно базового коина для покупки: [${this.pairName}] ${baseCoin}: ${freeBase}, Am: ${amount}, Prc: ${price} ${user.login}`);
+        const isNotValid = this.checkValidOrder(order, taker);
+        if (isNotValid){
+            return;
         }
         const opposite = type === 'sell' ? 'buy' : 'sell';
         // TODO: порверить баланс юзера с учетом пендинга
@@ -242,6 +241,21 @@ module.exports = class {
             console.log(e);
             log.error('setMakerOrder: ' + e);
             return false;
+        }
+    }
+
+    checkValidOrder(order, user) {
+        const {price, amount, type} = order;
+        const {altCoin, baseCoin} = this;
+        const freeAlt = user.deposits[altCoin].free;
+        const freeBase = user.deposits[baseCoin].free;
+        console.log('dposits:', { freeAlt, freeBase });
+        if (type === 'sell' && freeAlt < amount) { // нужно проверить баланс альта
+            log.error(`Не достаточно альткоина для продажи: [${this.pairName}] ${altCoin}: ${freeAlt}, Am: ${amount}, Prc: ${price} ${user.login}`);
+            return `Не достаточно ${altCoin} для продажи`;
+        } else if (type === 'buy' && freeBase < amount * price) {
+            log.error(`Не достаточно базового коина для покупки: [${this.pairName}] ${baseCoin}: ${freeBase}, Am: ${amount}, Prc: ${price} ${user.login}`);
+            return `Не достаточно ${baseCoin} для покупки`;
         }
     }
 };

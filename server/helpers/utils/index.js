@@ -21,9 +21,9 @@ module.exports = {
         // TODO: В отлельные методы утилиты / тяжелые запросы
         user.openOrders = {};
         user.closeOrders = {};
+        const {deposits} = user;
+        config.knownCoins.forEach(c=> deposits[c].pending = deposits[c].free = 0);
         if (openOrders){
-            const {deposits} = user;
-            config.knownCoins.forEach(c=> deposits[c].pending = 0);
             for (const pairName of config.tradePairs){
                 user.openOrders[pairName] = await DB[pairName + '_Depth'].db.syncFind({user_id: user._id});
                 const [baseCoin, altCoin] = pairName.split('_');

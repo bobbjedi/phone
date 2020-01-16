@@ -85,8 +85,27 @@ export default {
             if (this.isBlockedButtons) {
                 return;
             }
+            let err = false;
+            console.log(type, this.deposits[this.baseCoin].free, this.altAmount * this.price)
+            if (type === 'sell' && this.deposits[this.altCoin].free < this.altAmount) {
+                err = `Не достаточно ${this.altCoin} для продажи`;
+            } else if (type === 'buy' && this.deposits[this.baseCoin].free < this.altAmount * this.price) {
+                err = `Не достаточно ${this.baseCoin} для покупки`;
+            }
+            console.log({err});
+            if (err) {
+                return Store.notify({
+                    type: 'error',
+                    text: err
+                });
+            }
+
             this.$f7.preloader.show();
             this.isBlockedButtons = true;
+            setTimeout(() => {
+                this.isBlockedButtons = false;
+                this.$f7.preloader.hide();
+            }, 2000);
             api({
                 action: 'setOrder',
                 data: {
@@ -99,12 +118,12 @@ export default {
                 setTimeout(() => {
                     Store.updateUser();
                     Store.getPairData();
+                    this.isBlockedButtons = false;
+                    this.$f7.preloader.hide();
                     Store.notify({
                         type: 'success',
                         text: 'Заявка отправлена!'
                     });
-                    this.$f7.preloader.hide();
-                    this.isBlockedButtons = false;
                 }, 1000);
             });
         }
