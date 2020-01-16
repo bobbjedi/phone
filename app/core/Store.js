@@ -52,7 +52,7 @@ export default new Vue({
             api({
                 action: 'getUser',
                 token: this.user.token,
-                data: {pairNameFull: this.terminalPair}
+                data: {pairNameFull: true}
             }, (data) => {
                 self.user = data;
             }, true);
