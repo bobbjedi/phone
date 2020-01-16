@@ -1,7 +1,7 @@
 <template>
     <div id="depth">
-        <div class="depth-header">
-            <span>Price(BTC)</span><span>Amount(BIP)</span>
+          <div class="label m5 depth-header txt-white">
+           <span>Price</span> {{pairName}} <span>Amount</span>
         </div>
         <div class="depth-path depth-sell">
             <div class="sell-line price-line" 
@@ -10,8 +10,8 @@
                  :style="{background: 'linear-gradient(to left, rgb(232, 153, 150) ' + mathPercent(sell[p]) + '%, rgba(0,0,0,0) ' + mathPercent(sell[p]) + '%, rgba(0,0,0,0) ' + (100 - mathPercent(sell[p])) + '%)'}"
                  @click="setPrice(p)"
             >
-                <div class="price txt-red">{{p}}</div>
-                <div class="value">{{sell[p]}}</div>
+                <div class="price txt-red">{{p | format}}</div>
+                <div class="value">{{sell[p] | format}}</div>
             </div>
         </div>
         <div :class="'last-price txt-' + (lastPrice.type === 'sell' ? 'red' : 'green')">{{lastPrice.price}}</div>
@@ -22,8 +22,8 @@
                  :key="p"
                   @click="setPrice(p)"
                  >
-                <div class="price txt-green">{{p}}</div>
-                <div class="value">{{buy[p]}}</div>
+                <div class="price txt-green">{{p | format}}</div>
+                <div class="value">{{buy[p] | format}}</div>
             </div>
         </div>
     </div>
@@ -39,7 +39,10 @@ export default {
             prices: {sell:[], buy:[]},
             sell: {},
             buy: {},
-            lastPrice: {}
+            lastPrice: {},
+            baseCoin: '',
+            altCoin: ''
+
         }
     },
     created(){
@@ -49,6 +52,10 @@ export default {
     },
     computed:{
         pairName: () => Store.terminalPair,
+        pairName() {
+            [this.baseCoin, this.altCoin] = Store.terminalPair.split('_');
+            return Store.terminalPair
+        },
     },
     methods: {
         mathPercent(value) {

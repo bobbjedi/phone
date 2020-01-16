@@ -11,8 +11,8 @@
             v-for="o in pairData" 
             :key="o._id" 
             :class="'txt-' + (o.type === 'sell' ? 'red' : 'green')">
-                <td>{{o.price}}</td>
-                <td>{{o.amount}}</td>
+                <td>{{o.price | format}}</td>
+                <td>{{o.amount| format}}</td>
                 <td class="txt-red hovered" @click="closeOrder(o._id)">&#10006;</td>
             </tr>
         </table>

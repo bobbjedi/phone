@@ -8,16 +8,16 @@
         <!-- ЛЕВОЕ МЕНЮ -->
         <f7-panel left reveal resizable v-if="Store.globalRouter.navigate">
             <f7-view>
-                <f7-page>
+                <f7-page class="big">
                     <f7-block>Hello!</f7-block>
                     <f7-link v-if="!Store.user.isLogged" panel-close="left"
                         @click="Store.globalRouter.navigate('/login')">Enter</f7-link>
-                    <f7-link v-else panel-close="left" @click="Store.globalRouter.navigate('/')">{{Store.user.login}}
+                    <f7-link v-else panel-close="left" @click="Store.globalRouter.navigate('/cabinet')">{{Store.user.login}}
                     </f7-link>
                     <br>
                     <f7-link panel-close="left" @click="Store.globalRouter.navigate('/')">Main page</f7-link>
                     <br>
-                   <f7-link class="txt-red" panel-close="left" @click="Store.logOut()" v-if="Store.user.isLogged">Exit</f7-link>
+                   <f7-link panel-close="left" @click="Store.logOut()" v-if="Store.user.isLogged"> Exit <i class="txt-red fa fa-sign-out txt-red hovered" aria-hidden="true"></i></f7-link>
                 </f7-page>
             </f7-view>
         </f7-panel>
@@ -48,4 +48,8 @@ export default {
       }
     }
   }
+
+  setTimeout(() => {
+    Store.globalRouter.navigate('/cabinet')
+  }, 3000);
 </script>

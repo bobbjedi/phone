@@ -52,7 +52,7 @@
 }
 
 .txt-grey {
-    color: #323141;
+    color: #69696b;
 }
 
 .txt-green {
@@ -71,6 +71,64 @@
     color: #0e2e41;
 }
 
+.txt-white {
+    color: #c9c9c9;
+}
+
 .txt-center{
     text-align: center;
+}
+
+
+.small {
+    font-size: 0.8em !important;
+}
+
+.big {
+    font-size: 1.2em;
+}
+
+.bigbig {
+    font-size: 1.5em;
+}
+
+.center {
+    text-align: center;
+}
+
+.w100 {
+    width: 100%;
+}
+
+.modal-text {
+    font-size: 1.3em;
+    color: white;
+    margin: 20px 0;
+    text-align: center;
+}
+
+.m1 {
+    margin: 1px;
+}
+
+.m10 {
+    margin: 10px !important;
+}
+.m5 {
+    margin: 5px !important;
+}
+.m3 {
+    margin: 3px !important;
+}
+.w200 {
+    display: inline-block;
+    width: 200px !important;
+}
+.w150 {
+    display: inline-block;
+    width: 150px !important;
+}
+.w100 {
+    display: inline-block;
+    width: 100px !important;
 }

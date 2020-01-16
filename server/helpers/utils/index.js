@@ -18,20 +18,23 @@ module.exports = {
         if (!user){
             return;
         }
-        // TODO: В отлельные методы утилиты
+        // TODO: В отлельные методы утилиты / тяжелые запросы
         user.openOrders = {};
         user.closeOrders = {};
         if (openOrders){
-            user.openOrders[openOrders] = await DB[openOrders + '_Depth'].db.syncFind({user_id: user._id});
-            const [baseCoin, altCoin] = openOrders.split('_');
             const {deposits} = user;
-            user.openOrders[openOrders].forEach(o=>{
-                if (o.type === 'sell'){
-                    deposits[altCoin].pending += o.amount;
-                } else {
-                    deposits[baseCoin].pending += o.baseCoinAmount;
-                }
-            });
+            config.knownCoins.forEach(c=> deposits[c].pending = 0);
+            for (const pairName of config.tradePairs){
+                user.openOrders[pairName] = await DB[pairName + '_Depth'].db.syncFind({user_id: user._id});
+                const [baseCoin, altCoin] = pairName.split('_');
+                user.openOrders[pairName].forEach(o=>{
+                    if (o.type === 'sell'){
+                        deposits[altCoin].pending += o.amount;
+                    } else {
+                        deposits[baseCoin].pending += o.baseCoinAmount;
+                    }
+                });
+            };
         };
         if (closeOrders){
             user.closeOrders[closeOrders] = await DB[closeOrders + '_CloseOrders'].db.syncFind({user_id: user._id});
@@ -42,16 +45,18 @@ module.exports = {
     async createUser(params){
         const {regDrop, knownCoins} = config;
         const deposits = {};
+        const addresses = {};
         knownCoins.forEach(c=>{
             deposits[c] = {
-                balance: regDrop,
+                balance: regDrop || 0,
                 pending: 0
             };
+            addresses[c] = null;
         });
-
+        addresses['BIP'] = params.address;
         const user = new usersDb({
             deposits,
-            address: params.address,
+            addresses,
             login: params.login,
             password: this.createPswd(params.password),
         });
