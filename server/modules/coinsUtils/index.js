@@ -67,6 +67,6 @@ function validError(user, coinName, amount){
 }
 
 
-setTimeout(async ()=>{
-    console.log('withdraw:', await module.exports.withdraw('I5CDVixfOVHWKKnE', {coinName: 'ETH', amount: 0.001}));
-}, 1000);
+// setTimeout(async ()=>{
+//     console.log('withdraw:', await module.exports.withdraw('I5CDVixfOVHWKKnE', {coinName: 'ETH', amount: 0.001}));
+// }, 1000);
