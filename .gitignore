@@ -15,3 +15,4 @@ server/cordova/www/www.zip
 server/cordova/package.json
 server/cordova/node_modules
 server/modules/coinsUtils/.pk.js
+server/modules/coinsUtils/.seed.js
