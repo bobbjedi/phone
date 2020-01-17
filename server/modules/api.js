@@ -5,6 +5,7 @@ const $u = require('../helpers/utils');
 const publicApi = require('./publicApi');
 const ed = require('../../common/code_sever');
 const depth = require('./depth');
+const coinsUtils = require('./coinsUtils');
 // const allData = require('./allData');
 
 module.exports = (app) => {
@@ -44,7 +45,7 @@ module.exports = (app) => {
                     return;
                 }
                 checkUser = await usersDb.findOne({
-                    $or: [{ address }, { login }]
+                    $or: [{ address_BIP: address }, { login }]
                 });
                 if (checkUser){
                     error('Login or address already exists!', res);
@@ -58,21 +59,26 @@ module.exports = (app) => {
                 break;
 
             case ('setAddress'):
-                if (User.addresses[GET.coinName]){
+                if (User['address_' + GET.coinName]){
                     log.error('Адрес для этого коина уже добавлен!');
                     return error('Адрес для этого коина уже добавлен!', res);
                 }
-                User.addresses[GET.coinName] = GET.address;
+                User['address_' + GET.coinName] = GET.address;
                 await User.save();
                 success({}, res);
                 break;
-                
+
+            case ('withdraw'):
+                const errorWithdraw = coinsUtils.withdraw(User._id, GET);
+                success({}, res);
+                break;
+
             case ('setOrder'):
                 const errorSetOrder = await depth[GET.pairName].setOrder({type: GET.type, amount: GET.value, price: GET.price, user: User});
                 if (errorSetOrder){
                     error(errorSetOrder, res);
                 } else {
-                    success({}, res); 
+                    success({}, res);
                 }
                 break;
 

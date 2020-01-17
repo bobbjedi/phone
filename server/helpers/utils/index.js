@@ -1,5 +1,5 @@
-const DB = require('../../modules/DB')
-const {usersDb, depositsDb} = DB;
+const DB = require('../../modules/DB');
+const {usersDb} = DB;
 const config = require('../../helpers/configReader');
 const sha256 = require('sha256');
 const log = require('../log');
@@ -46,25 +46,23 @@ module.exports = {
     async createUser(params){
         const {regDrop, knownCoins} = config;
         const deposits = {};
-        const addresses = {};
+        const user = new usersDb({
+            deposits,
+            login: params.login,
+            password: this.createPswd(params.password),
+        });
         knownCoins.forEach(c=>{
             deposits[c] = {
                 balance: regDrop || 0,
                 pending: 0
             };
-            addresses[c] = null;
+            user['address_' + c] = null;
         });
-        addresses['BIP'] = params.address;
-        const user = new usersDb({
-            deposits,
-            addresses,
-            login: params.login,
-            password: this.createPswd(params.password),
-        });
+        user.address_BIP = params.address;
         await user.save();
-        if (regDrop){
-            depositsDb.db.syncInsert({user_id: user._id, amount: regDrop, type: 'regdrop'});
-        }
+        // if (regDrop){
+        //     depositsDb.db.syncInsert({user_id: user._id, amount: regDrop, type: 'regdrop'});
+        // }
         return user;
     },
     createPswd(password){

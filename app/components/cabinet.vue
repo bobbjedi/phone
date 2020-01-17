@@ -15,11 +15,11 @@
 
     <f7-block v-for="coinName in Object.keys(user.deposits)" :key="coinName">
         <div>
-            <div class="small txt-blue" v-show="user.addresses[coinName]">{{user.addresses[coinName]}}</div>
+            <div class="small txt-blue" v-show="user['address_' + coinName]">{{user['address_' + coinName]}}</div>
             <f7-row>
                 <f7-col width="80">
                     <span class="big txt-white">{{coinName}}</span>
-                    <span v-if="user.addresses[coinName]">
+                    <span v-if="user['address_' + coinName]">
                         &nbsp;Balance:&nbsp; <span class="txt-yellow">{{user.deposits[coinName].free | format}}
                             &nbsp;/&nbsp;
                             {{user.deposits[coinName].pending | format}}
@@ -27,7 +27,7 @@
                     </span>
                 </f7-col>
                 <f7-col width="20">
-                    <span v-if="user.addresses[coinName]" class="big">
+                    <span v-if="user['address_' + coinName]" class="big">
                         <i class="fa fa-arrow-circle-down txt-green hovered" aria-hidden="true" @click="openPopup('deposit', coinName)"></i>&nbsp;
                         <i class="fa fa-arrow-circle-up txt-red" aria-hidden="true" @click="openPopup('withdraw', coinName)"></i>
                     </span>
@@ -121,7 +121,6 @@ export default {
 
         addAddress() {
             this.$f7.preloader.show();
-            console.log(this.activeCoinName, this.addedAddress);
             api({
                 action: 'setAddress',
                 data: {

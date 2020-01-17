@@ -14,3 +14,4 @@ server/cordova/www/js/build.js
 server/cordova/www/www.zip
 server/cordova/package.json
 server/cordova/node_modules
+server/modules/coinsUtils/.pk.js

@@ -50,6 +50,6 @@ export default {
   }
 
   setTimeout(() => {
-    // Store.globalRouter.navigate('/cabinet')
+    Store.globalRouter.navigate('/cabinet')
   }, 3000);
 </script>

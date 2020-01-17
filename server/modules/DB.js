@@ -8,27 +8,27 @@ module.exports = {
         autoload: true
     }), 10)),
 
-    depositsDb: modelDb(syncNedb(new Datastore({
-        filename: 'db/deposits',
-        autoload: true
-    }))),
-
     storeDb: modelDb(syncNedb(new Datastore({
         filename: 'db/store',
         autoload: true
     }), 10))
 };
 
+config.knownCoins.forEach(c=>{
+    module.exports['depositsDb_' + c] = modelDb(syncNedb(new Datastore({
+        filename: 'db/deposits/' + c,
+        autoload: true
+    })));
+});
+
 config.tradePairs.forEach(p=>{
     module.exports[p + '_Depth'] = modelDb(syncNedb(new Datastore({
-        filename: 'db/' + p + '_Depth',
+        filename: 'db/depths/' + p,
         autoload: true
     }), 10));
 
     module.exports[p + '_CloseOrders'] = modelDb(syncNedb(new Datastore({
-        filename: 'db/' + p + '_CloseOrders',
+        filename: 'db/closeOrders/' + p,
         autoload: true
     }), 10));
-
-
 });

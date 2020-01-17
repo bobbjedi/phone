@@ -6,7 +6,6 @@ const DIR_NAME = __dirname + '/cordova/www/';
 
 require('./modules/api')(app);
 require('./modules/cron');
-require('./modules/checkerTx');
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({extended: true})); // for parsing application/x-www-form-urlencoded
 const port = 3030;
