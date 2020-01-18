@@ -65,12 +65,12 @@ export default {
             const {terminalPair} = Store;
             const data = Store.publicPairsData[Store.terminalPair];
             this.prices = data.prices;
-            this.sell = data.depth.sell;
-            this.buy = data.depth.buy;
+            this.sell = data.depth.sell.split(-10);
+            this.buy = data.depth.buy.split(0, 10);
             this.lastPrice = data.lastPrice;
             this.maxValue = 0;
-            this.prices.buy.forEach(p=> this.maxValue = Math.max(this.maxValue, data.depth.buy[p]));
-            this.prices.sell.forEach(p=> this.maxValue = Math.max(this.maxValue, data.depth.sell[p]));
+            this.prices.buy.forEach(p=> this.maxValue = Math.max(this.maxValue, this.prices.buy[p]));
+            this.prices.sell.forEach(p=> this.maxValue = Math.max(this.maxValue, this.prices.sell[p]));
         },
          setPrice(p){
              Store.setPrice(p);
