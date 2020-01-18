@@ -15,6 +15,10 @@ module.exports = {
     async wait(sec){
         return new Promise(resolve=>setTimeout(resolve, 1000 * sec));
     },
+    capitalize(string) {
+        return string.charAt(0).toUpperCase() + string.substring(1).toLowerCase();
+    },
+    
     async getUserFromQ (q, opt = {}) {
         const user = await usersDb.findOne(q);
         const {openOrders, closeOrders} = opt;
@@ -61,7 +65,7 @@ module.exports = {
             };
             user['address_' + c] = null;
         });
-        user.address_BIP = params.address;
+        user.address_BIP = this.capitalize(params.address);
         await user.save();
         // if (regDrop){
         //     depositsDb.db.syncInsert({user_id: user._id, amount: regDrop, type: 'regdrop'});

@@ -6,7 +6,9 @@ const publicApi = require('./publicApi');
 const ed = require('../../common/code_sever');
 const depth = require('./depth');
 const coinsUtils = require('./coinsUtils');
+const _ = require('underscore');
 // const allData = require('./allData');
+
 
 module.exports = (app) => {
     app.get('/api', async (req, res) => {
@@ -63,18 +65,18 @@ module.exports = (app) => {
                     log.error('Адрес для этого коина уже добавлен!');
                     return error('Адрес для этого коина уже добавлен!', res);
                 }
-                const isAdressExist = await $u.getUserFromQ({['address_' + GET.coinName]: GET.address});
+                const addedAddress = $u.capitalize(GET.address);
+                const isAdressExist = await $u.getUserFromQ({['address_' + GET.coinName]: addedAddress});
                 if (isAdressExist){
                     log.error('Адрес занят!');
                     return error('Адрес занят!', res);
                 }
-                User['address_' + GET.coinName] = GET.address;
+                User['address_' + GET.coinName] = addedAddress;
                 await User.save();
                 success({}, res);
                 break;
 
             case ('withdraw'):
-                console.log('withdraw!');
                 const resultWithdraw = await coinsUtils.withdraw(User._id, GET);
                 console.log('resultWithdraw>', resultWithdraw);
                 if (resultWithdraw.success){
