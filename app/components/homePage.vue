@@ -126,7 +126,6 @@ export default {
                 }
             }, data => {
                 data.prices.sell.reverse();
-                console.log(data);
                 Vue.set(Store.publicPairsData, pairName, data);
                 cb && cb();
                 setTimeout(() => {
