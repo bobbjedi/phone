@@ -47,12 +47,24 @@
                 </f7-nav-right>
             </f7-navbar>
 
-            <f7-block v-if="popupMethod === 'deposit'">
-                <p>Deposit.</p>
-            </f7-block>
-
+            <span v-if="popupMethod === 'deposit'">
+                <f7-block strong>
+                    Будте внимательны! Убедитесь, что средства будут переведены с Вашего кошелька <span class="txt-yellow">{{user['address_' + activeCoinName]}}</span>! Иначе средства могут быть утеряны!
+                </f7-block>
+                <f7-block>
+                    <p>Для пополнения Вашего счета {{activeCoinName}} необходимо отправить необходимое количество {{activeCoinName}} на 
+                        <span class="txt-green small">{{addresses[activeCoinName]}}</span>
+                        <i @click="copy(addresses[activeCoinName])" class="fa fa-clone txt-blue" aria-hidden="true"></i>
+                        .</p>
+                </f7-block>
+            </span>
             <f7-block v-if="popupMethod === 'withdraw'">
-                <p>Withdraw</p>
+                <p>Комиссия на вывод составляет {{config.withdrawComission}}%</p>
+                <f7-list no-hairlines-md>
+                    <f7-list-input @input="withdrawAmunt = +$event.target.value" :label="'Вывести ' + activeCoinName" type="text" placeholder="Количество" :info="'Доступно: ' + user.deposits[activeCoinName].free" error-message="Только цыфры!" required validate pattern="^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$" clear-button>
+                    </f7-list-input>
+                </f7-list>
+                <f7-button large fill @click="withdraw">Вывести</f7-button>
             </f7-block>
             <span v-if="popupMethod === 'addAddress'">
                 <f7-block strong>
@@ -64,7 +76,7 @@
                     <p> Для пополнения счета {{activeCoinName}} в системе будут учитываться транзакции <b>только</b> с этого адреса. Вывод будет осущетсявляться также <b>только</b> на него. Поэтому будте внимательны и храните его seed фразу в надежном месте.</p>
                     <p>Сделано это исключительно для безопасности наших пользователей.</p>
                     <f7-list no-hairlines-md>
-                        <f7-list-input @input="addedAddress = $event.target.value" :label="activeCoinName + ' address'" floating-label type="text" :placeholder="activeCoinName" clear-button>
+                        <f7-list-input class="small" @input="addedAddress = $event.target.value" :label="activeCoinName + ' address'" floating-label type="text" placeholder="0x..." clear-button>
                         </f7-list-input>
                     </f7-list>
                     <f7-col tag="span">
@@ -82,21 +94,25 @@
 <script>
 import Store from '../core/Store';
 import api from '../core/api';
+import config from '../../config';
 import Vue from 'vue';
 
 export default {
     data() {
         return {
+            config,
             popupOpened: false,
             popupMethod: '',
             activeCoinName: '',
             popupTitle: '',
-            addedAddress: ''
+            addedAddress: '',
+            withdrawAmunt: 0
         };
     },
 
     computed: {
-        user: ()=> Store.user,
+        user: () => Store.user,
+        addresses: () => Store.public.addresses
     },
     methods: {
         openPopup(popupMethod, coinName) {
@@ -120,7 +136,24 @@ export default {
         },
 
         addAddress() {
+            const {addedAddress, activeCoinName} = this;
+            let isValid = true;
+            if (activeCoinName === 'BIP') {
+                if (!addedAddress.startsWith('Mx')) {
+                    isValid = false;
+                }
+            } else if (!addedAddress.startsWith('0x')) {
+                isValid = false;
+            }
+            if (!isValid) {
+                Store.notify({
+                    type: 'error',
+                    text: 'Невалидный адрес!'
+                });
+                return;
+            }
             this.$f7.preloader.show();
+            setTimeout(() => this.$f7.preloader.hide(), 2000);
             api({
                 action: 'setAddress',
                 data: {
@@ -133,16 +166,41 @@ export default {
                         type: 'success',
                         text: 'Адрес ' + this.activeCoinName + ' успешно добавлен!'
                     });
-                    this.$f7.preloader.hide();
                     this.popupOpened = false;
                     this.addedAddress = '';
+                    this.$f7.preloader.hide();
                     Store.updateUser();
                 }, 1000);
             });
         },
 
         withdraw() {
-            this.popupOpened = false;
+            const {withdrawAmunt, user, activeCoinName} = this;
+            if (withdrawAmunt > user.deposits[activeCoinName].free) {
+                Store.notify({
+                    type: 'error',
+                    text: 'Превышено доступное количество!'
+                });
+                return;
+            }
+            this.$f7.preloader.show();
+            setTimeout(() => this.$f7.preloader.hide(), 2000);
+            api({
+                action: 'withdraw',
+                data: {
+                    coinName: activeCoinName,
+                    amount: withdrawAmunt
+                }
+            }, () => {
+                Store.notify({
+                    type: 'success',
+                    text: `Вывод ${withdrawAmunt} ${activeCoinName} успешно осуществлен!`
+                });
+                this.withdrawAmunt = 0;
+                this.popupOpened = false;
+                this.$f7.preloader.hide();
+                Store.updateUser();
+            });
         }
     }
 };

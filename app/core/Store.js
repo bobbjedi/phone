@@ -10,7 +10,7 @@ export default new Vue({
         if (this.user.token) {
             this.updateUser();
         }
-        this.notify = (obj)=>{
+        window.notify = this.notify = (obj)=>{
             obj.group = 'foo';
             const {type} = obj;
             if (type === 'error'){
@@ -82,3 +82,4 @@ export default new Vue({
         }
     }
 });
+

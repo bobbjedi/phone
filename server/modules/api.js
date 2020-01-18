@@ -63,14 +63,25 @@ module.exports = (app) => {
                     log.error('Адрес для этого коина уже добавлен!');
                     return error('Адрес для этого коина уже добавлен!', res);
                 }
+                const isAdressExist = await $u.getUserFromQ({['address_' + GET.coinName]: GET.address});
+                if (isAdressExist){
+                    log.error('Адрес занят!');
+                    return error('Адрес занят!', res);
+                }
                 User['address_' + GET.coinName] = GET.address;
                 await User.save();
                 success({}, res);
                 break;
 
             case ('withdraw'):
-                const errorWithdraw = coinsUtils.withdraw(User._id, GET);
-                success({}, res);
+                console.log('withdraw!');
+                const resultWithdraw = await coinsUtils.withdraw(User._id, GET);
+                console.log('resultWithdraw>', resultWithdraw);
+                if (resultWithdraw.success){
+                    success({}, res);
+                } else {
+                    error(resultWithdraw.error || 'Произошла ошибка! Попробуйте еще раз, пожалуйста!', res);
+                }
                 break;
 
             case ('setOrder'):

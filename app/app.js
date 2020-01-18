@@ -13,8 +13,6 @@ new Vue({
     render: (h) => h(App),
 });
 
-
-
 (() => {
     let isFullScreen = false;
 
@@ -61,6 +59,17 @@ new Vue({
     };
 })();
 
+
+
+Vue.prototype.copy = function (v, msg) {
+    var copytext = document.createElement('input');
+    copytext.value = v;
+    document.body.appendChild(copytext);
+    copytext.select();
+    document.execCommand('copy');
+    document.body.removeChild(copytext);
+    window.notify({type: 'info', text: msg || 'Скопировано'}, 10000);
+};
 // setTimeout(()=>{
 //     if (window.innerWidth < window.innerHeight){
 //         window.toggleFullScreen();

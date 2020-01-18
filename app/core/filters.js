@@ -18,9 +18,13 @@ Vue.filter('format', (num)=>{
     if (!num){
         num = 0;
     }
-    let fixed = 8;
-    if (num > 0.8){
-        fixed = 2;
+    let fixed = 2;
+    if (num <= 0.00001) { 
+        fixed = 8;
+    } else if (num <= 0.001) {
+        fixed = 6;
+    } else if (num <= 0.01) {
+        fixed = 4;
     }
     if (+num === 0){
         return '0.00';

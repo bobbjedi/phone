@@ -53,7 +53,7 @@ module.exports = {
             if (hash){
                 userDeposit.balance = $u.round(userDeposit.balance - amount);
                 depositsDb.db.insert({hash, user_id: user._id, type: 'withdraw', amount, unix: $u.unix()});
-                log.info('Withdraw: ' + user.login + ' amount: ' + amount + ' hash: ' + hash);
+                log.info('BIP Withdraw: ' + user.login + ' amount: ' + amount + ' hash: ' + hash);
                 delete withdrawBlocked[user._id];
                 return true;
             }

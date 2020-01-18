@@ -12,6 +12,9 @@ module.exports = {
     unix(){
         return new Date().getTime();
     },
+    async wait(sec){
+        return new Promise(resolve=>setTimeout(resolve, 1000 * sec));
+    },
     async getUserFromQ (q, opt = {}) {
         const user = await usersDb.findOne(q);
         const {openOrders, closeOrders} = opt;

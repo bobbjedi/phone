@@ -2,6 +2,21 @@
     width: 49%;
 }
 /* TERMINAL */
+
+
+.buttons-type{
+    display: flex;
+    justify-content: space-evenly;
+}
+.but-type{
+    text-align: center;
+    width: 45%;
+    border-bottom: 1px solid rgba(128, 128, 128, 0);
+    transition: .3s;
+}
+.but-type.active-type{
+    border-bottom: 1px solid grey;
+}
 .terminal{
     display: flex;
     justify-content: space-between;
@@ -56,6 +71,10 @@
     font-size: 1.2em;
 }
 
+.terminal-but-action{
+    width: 70%;
+    transition: .3s;
+}
 /* OPEN ORDERS */
 .open-orders table{
     width: 100%;

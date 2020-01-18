@@ -68,7 +68,7 @@ setInterval(() => {
                 if (amount > 0){
                     // amount *= 1 - config.comission;
                     depositsDb.db.insert({hash, user_id: user._id, type: 'deposit', amount, unix: $u.unix()});
-                    user.deposit += amount;
+                    user.deposits[coinName].balance = $u.round(user.deposits[coinName].balance + amount);
                     user.save();
                     log.info(`newDeposit:
                     hash: ${hash}

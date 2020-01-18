@@ -6,7 +6,7 @@ const depth = require('../modules/depth');
 
 module.exports = {
     pairsData: {},
-
+    usersBlockedActions: {},
     async init(){
         let system = await storeDb.findOne({});
         if (!system){

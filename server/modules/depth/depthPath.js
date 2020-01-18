@@ -2,10 +2,13 @@ const DB = require('../DB');
 const _ = require('underscore');
 const log = require('../../helpers/log');
 const $u = require('../../helpers/utils');
+let Store;
 /**
  * @constructor type sell или buy
  */
-
+setTimeout(()=>{
+    Store = require('../../helpers/Store');
+}, 3000);
 const depths = {};
 module.exports = class {
     constructor(baseCoin, altCoin) {
@@ -104,10 +107,14 @@ module.exports = class {
     async setOrderInDepth(order) {
         const {user, price, amount, type} = order;
         const taker = await $u.getUserFromQ({_id: user._id}, {openOrders: true});// TODO: получим и пендинги 
+        if (Store.usersBlockedActions[taker._id]){
+            return console.log('setOrderInDepth BLOCKED ' + taker.login);
+        }
         const isNotValid = this.checkValidOrder(order, taker);
         if (isNotValid){
             return;
         }
+        Store.usersBlockedActions[taker._id] = true;
         const opposite = type === 'sell' ? 'buy' : 'sell';
         // TODO: порверить баланс юзера с учетом пендинга
         let pricesOpposite = this.prices[opposite];
@@ -121,7 +128,7 @@ module.exports = class {
         console.log({pricesOpposite, currentPrice, price, isTaker: checkPriceTaker(currentPrice, price)});
         // Ставит в спред или ниже - отсрочка
         if (!currentPrice || !checkPriceTaker(currentPrice, price)){ // если не тейкер то ставим новый ордер
-            return this.setMakerOrder(taker, type, price, amount);
+            return await this.setMakerOrder(taker, type, price, amount);
         }
         console.log('Чистим!!!');
         // ставит чтобы чистить стакан вверх
@@ -165,13 +172,15 @@ module.exports = class {
                 await this.updatePrices();
                 currentPrice = this.prices[opposite][0]; // очередная цена
             } catch (e) {
+                delete Store.usersBlockedActions[taker._id];
                 log.error('set BUY/SELL ' + e);
                 return false;
             }
         }
         if (leftAmount){
-            return this.setMakerOrder(taker, type, price, leftAmount);
+            return await this.setMakerOrder(taker, type, price, leftAmount);
         }
+        delete Store.usersBlockedActions[taker._id];
         return true;
     }
     async userSellCoin(seller, amount, baseCoinAmount, price, isMaker){
@@ -215,8 +224,10 @@ module.exports = class {
             await this.ordersDb.db.syncInsert({user_id: user._id, baseCoinAmount, time: $u.unix(), type, price, amount});
             await user.save();
             await this.updatePrices();
+            delete Store.usersBlockedActions[user._id];
             return true;
         } catch (e){
+            delete Store.usersBlockedActions[user._id];
             console.log(e);
             log.error('setMakerOrder: ' + e);
             return false;
@@ -259,4 +270,6 @@ module.exports = class {
         }
     }
 };
+
+
 
