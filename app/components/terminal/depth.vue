@@ -64,7 +64,10 @@ export default {
         updateDepthData(){
             const {terminalPair} = Store;
             const data = Store.publicPairsData[Store.terminalPair];
-            this.prices = data.prices;
+            this.prices = {
+                buy: data.prices.buy.slice(0, 10),
+                sell: data.prices.sell.slice(-10),
+            };
             this.sell = data.depth.sell;
             this.buy = data.depth.buy;
             this.lastPrice = data.lastPrice;

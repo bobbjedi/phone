@@ -81,6 +81,9 @@
     color: rgb(230, 227, 227);
 }
 
+.block-open-orders{
+    overflow: auto;
+}
 /* INFO PAGE */
 
 #info-trading-pairs table{
@@ -112,7 +115,8 @@
     justify-content: space-between;
 }
 .price-line{
-    padding: 1px 5px;
+    font-size: 0.9em;
+    padding: 0px 5px;
     display: flex;
     justify-content: space-between;
     margin-bottom: 1px;
