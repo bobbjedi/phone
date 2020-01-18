@@ -21,7 +21,7 @@
         <div class="custom-input">
             <div class="input-sign hovered txt-red" @click="altAmount -= limit.min">-</div>
             <input type="number" v-model.number="altAmount" :class="{'txt-red': !validate.altAmount}">
-            <div class="input-sign hovered txt-green" @click="altAmount += limits.min">+</div>
+            <div class="input-sign hovered txt-green" @click="altAmount += limit.min">+</div>
         </div>
     </div>
     <div class="terminal-input">
