@@ -66,13 +66,13 @@
 }
 
 .terminall-sell-buy .but{
-    width: 48%;
     margin: 5px 0;
     font-size: 1.2em;
 }
 
 .terminal-but-action{
-    width: 70%;
+    margin-top: 3px;
+    width: 100%;
     transition: .3s;
 }
 /* OPEN ORDERS */
