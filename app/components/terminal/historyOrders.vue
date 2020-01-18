@@ -1,5 +1,6 @@
 <template>
 <div class="open-orders">
+    <div class="txt-yellow txt-center">History orders </div>
     <div class="block-history-orders">
         <table>
             <tr>

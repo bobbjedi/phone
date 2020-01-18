@@ -19,9 +19,9 @@
     <div class="terminal-input">
         <div class="label">{{altCoin}} <span class="big" :class="'txt-' + (validate.freeAlt ? 'green' : 'red')">{{altAmount | format}}</span></div>
         <div class="custom-input">
-            <div class="input-sign hovered txt-red" @click="altAmount--">-</div>
+            <div class="input-sign hovered txt-red" @click="altAmount -= limit.min">-</div>
             <input type="number" v-model.number="altAmount" :class="{'txt-red': !validate.altAmount}">
-            <div class="input-sign hovered txt-green" @click="altAmount++">+</div>
+            <div class="input-sign hovered txt-green" @click="altAmount += limits.min">+</div>
         </div>
     </div>
     <div class="terminal-input">

@@ -1,6 +1,6 @@
 <template>
 <div class="open-orders">
-    <div>Open orders {{pairName}}</div>
+    <div class="txt-yellow txt-center">Open orders {{pairName}}</div>
     <div class="block-open-orders">
         <table>
             <tr>

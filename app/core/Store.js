@@ -26,7 +26,6 @@ export default new Vue({
         };
         this.updatePublic();
         setInterval(()=>{
-            console.log('getPairData')
             this.updatePublic();
             this.getPairData();
         }, 10000);
@@ -59,7 +58,6 @@ export default new Vue({
             }, true);
         },
         updatePublic() {
-            console.log('PUBLIC')
             api({
                 action: 'getPublic'
             }, (data) => {
