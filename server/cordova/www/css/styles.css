@@ -1,6 +1,9 @@
 .left-parth{
     width: 49%;
 }
+.right-parth{
+    width: 49%;
+}
 /* TERMINAL */
 
 
@@ -81,7 +84,9 @@
     color: rgb(230, 227, 227);
 }
 
-.block-open-orders{
+.block-open-orders,
+.block-history-orders{
+    font-size: 0.8em;
     overflow: auto;
 }
 /* INFO PAGE */
@@ -108,7 +113,6 @@
 /* DEPTH */
 #depth{
     font-size: 0.9em;
-    width: 49%;
 }
 .depth-header{
     display: flex;

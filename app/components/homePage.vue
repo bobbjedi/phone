@@ -49,9 +49,12 @@
                 <div class="terminal">
                     <div class="left-parth">
                         <sell-buy></sell-buy>
+                        <historyOrders></historyOrders>
+                    </div>
+                    <div class="right-parth">
+                        <depth></depth>
                         <open-orders></open-orders>
                     </div>
-                    <depth></depth>
                 </div>
             </f7-block>
         </f7-page>
@@ -68,6 +71,7 @@ import Store from '../core/Store';
 import sellBuy from './terminal/sellBuy.vue';
 import openOrders from './terminal/openOrders.vue';
 import depth from './terminal/depth.vue';
+import historyOrders from './terminal/historyOrders.vue';
 import api from '../core/api';
 
 export default {
@@ -82,7 +86,8 @@ export default {
     components: {
         sellBuy,
         openOrders,
-        depth
+        depth,
+        historyOrders
     },
     watch: {
         async '$f7router.currentRoute.url'(v) {
@@ -121,6 +126,7 @@ export default {
                 }
             }, data => {
                 data.prices.sell.reverse();
+                console.log(data);
                 Vue.set(Store.publicPairsData, pairName, data);
                 cb && cb();
                 setTimeout(() => {

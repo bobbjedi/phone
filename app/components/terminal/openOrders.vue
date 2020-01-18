@@ -1,6 +1,6 @@
 <template>
 <div class="open-orders">
-    <p>Open orders {{pairName}}</p>
+    <div>Open orders {{pairName}}</div>
     <div class="block-open-orders">
         <table>
             <tr>
@@ -27,6 +27,7 @@ export default {
         pairName: () => Store.terminalPair,
         pairData() {
             mathHeight('.block-open-orders');
+            mathHeight('.block-history-orders');
             return Store.user.openOrders[this.pairName] || {};
         }
     },

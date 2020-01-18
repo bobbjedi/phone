@@ -31,7 +31,7 @@
 
 <script>
 import Store from '../../core/Store';
-
+import Vue from 'vue';
 export default {
     data() {
         return {
@@ -54,8 +54,12 @@ export default {
         pairName: () => Store.terminalPair,
         pairName() {
             [this.baseCoin, this.altCoin] = Store.terminalPair.split('_');
+               Vue.nextTick(() => {
+                const pairData = Store.public.pairsData[Store.terminalPair];
+                this.lastPrice = pairData && pairData.lastPrice || {};
+            });
             return Store.terminalPair
-        },
+        }
     },
     methods: {
         mathPercent(value) {
@@ -70,7 +74,6 @@ export default {
             };
             this.sell = data.depth.sell;
             this.buy = data.depth.buy;
-            this.lastPrice = data.lastPrice;
             this.maxValue = 0;
             this.prices.buy.forEach(p=> this.maxValue = Math.max(this.maxValue, data.depth.buy[p]));
             this.prices.sell.forEach(p=> this.maxValue = Math.max(this.maxValue, data.depth.sell[p]));

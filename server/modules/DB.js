@@ -30,5 +30,5 @@ config.tradePairs.forEach(p=>{
     module.exports[p + '_CloseOrders'] = modelDb(syncNedb(new Datastore({
         filename: 'db/closeOrders/' + p,
         autoload: true
-    }), 10));
+    })));
 });

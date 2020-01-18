@@ -22,7 +22,7 @@ module.exports = class {
         depths[this.pairName] = this;
         this.ordersDb = DB[this.pairName + '_Depth'];
         this.closeOrdersDb = DB[this.pairName + '_CloseOrders'];
-        this.lastPrice = {};
+        // this.lastPrice = {};
         this.updatePrices();
     }
     async getOrders(type) {
@@ -52,10 +52,10 @@ module.exports = class {
         this.prices.sell = prices.sell;
         this.prices.buy = prices.buy;
         this.depth = depth;
-        if (!this.lastPrice.price){
-            this.lastPrice.price = prices.sell[0] || prices.buy[prices.buy.length - 1] || 0;
-            this.lastPrice.type = 'buy';
-        }
+        // if (!this.lastPrice.price){
+        //     this.lastPrice.price = prices.sell[0] || prices.buy[prices.buy.length - 1] || 0;
+        //     this.lastPrice.type = 'buy';
+        // }
         // console.log('UPDATE', {depth, prices});
     }
     /**
@@ -161,13 +161,13 @@ module.exports = class {
                         maker = taker;
                     }
                     if (type === 'buy'){
-                        await this.userSellCoin(maker, currentAmount, baseCoinAmount, currentPrice, true);
-                        await this.userBuyCoin(taker, currentAmount, baseCoinAmount, currentPrice);
+                        await this.userSellCoin(maker, currentAmount, baseCoinAmount, currentPrice, false);
+                        await this.userBuyCoin(taker, currentAmount, baseCoinAmount, currentPrice, true);
                     } else {
-                        await this.userSellCoin(taker, currentAmount, baseCoinAmount, currentPrice);
-                        await this.userBuyCoin(maker, currentAmount, baseCoinAmount, currentPrice, true);
+                        await this.userSellCoin(taker, currentAmount, baseCoinAmount, currentPrice, true);
+                        await this.userBuyCoin(maker, currentAmount, baseCoinAmount, currentPrice, false);
                     }
-                    this.lastPrice = {type, price: currentPrice};
+                    // this.lastPrice = {type, price: currentPrice};
                 }
                 await this.updatePrices();
                 currentPrice = this.prices[opposite][0]; // очередная цена
@@ -183,7 +183,7 @@ module.exports = class {
         delete Store.usersBlockedActions[taker._id];
         return true;
     }
-    async userSellCoin(seller, amount, baseCoinAmount, price, isMaker){
+    async userSellCoin(seller, amount, baseCoinAmount, price, isTaker){
         const {altCoin, baseCoin} = this;
         seller.deposits[baseCoin].balance = $u.round(seller.deposits[baseCoin].balance + baseCoinAmount);
         seller.deposits[altCoin].balance = $u.round(seller.deposits[altCoin].balance - amount); // снимаем со счета
@@ -193,13 +193,14 @@ module.exports = class {
             amount,
             baseCoinAmount,
             price,
+            isTaker,
             type: 'sell'
         });
         await seller.save();
         return true;
     }
 
-    async userBuyCoin(buyer, amount, baseCoinAmount, price, isMaker){
+    async userBuyCoin(buyer, amount, baseCoinAmount, price, isTaker){
         const {altCoin, baseCoin} = this;
         amount = $u.round(amount);
         price = $u.round(price);
@@ -211,8 +212,17 @@ module.exports = class {
             amount,
             baseCoinAmount,
             price,
+            isTaker,
             type: 'buy'
         });
+        console.log(
+            {
+                user_id: buyer._id,
+                amount,
+                isTaker,
+                type: 'buy'
+            }
+        );
         await buyer.save();
         return true;
     }
