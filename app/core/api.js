@@ -12,7 +12,7 @@ export default async (obj, cb = () => {}, silent, type = 'api') => {
             const data = res.data;
             if (data.success) {
                 let dc = JSON.parse(await ed.d(data.result));
-                console.log('Resp:', obj.action + ' -> ', dc);
+                // console.log('Resp:', obj.action + ' -> ', dc);
                 cb(dc);
                 return;
             }
