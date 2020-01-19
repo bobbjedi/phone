@@ -1,7 +1,7 @@
 <template>
 <span v-if="Store.isLoad">
     <!-- Main Framework7 App component where we pass Framework7 params -->
-    <f7-app :params="f7params" theme-dark>
+    <f7-app :params="f7params" theme-dark color-theme="gray" bg-color="#444">
         <!-- в main ретдерится из routes.js -->
         <f7-view main url="/"></f7-view>
 
