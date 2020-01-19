@@ -6,7 +6,7 @@
                 <img src="https://vk.vkfaces.com/849416/v849416832/163825/r_9Ll0Fk5BU.jpg">
             </div>
             <div class="user-menu-path big">
-                <f7-link v-if="!Store.user.isLogged" panel-close="left" @click="Store.globalRouter.navigate('/login')" class="txt-white">Войти</f7-link>
+                <f7-link v-if="!Store.user.isLogged" panel-close="left" @click="Store.globalRouter.navigate('/login')" class="txt-white">Войти <i class="fa fa-sign-in txt-blue" aria-hidden="true"></i></f7-link>
                 <f7-link v-else panel-close="left" @click="Store.logOut()" class="txt-white">{{Store.user.login}} <i class="txt-red fa fa-sign-out txt-red hovered" aria-hidden="true"></i></f7-link>
                 <!-- <f7-link v-else panel-close="left" @click="Store.globalRouter.navigate('/cabinet')">{{Store.user.login}}</f7-link>
                 <f7-link panel-close="left" @click="Store.logOut()" v-if="Store.user.isLogged"> Exit <i class="txt-red fa fa-sign-out txt-red hovered" aria-hidden="true"></i></f7-link> -->
