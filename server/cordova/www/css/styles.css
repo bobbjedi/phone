@@ -143,3 +143,43 @@
 .vue-notification-group{
     z-index: 1000000000000000 !important;
 }
+
+
+/* MENU */
+
+.avatar-container{
+    background: black;
+    overflow: hidden;
+    border: 2px solid rgb(80, 80, 80);
+    width: 72px;
+    height: 72;
+    border-radius: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+}
+.avatar-container img{
+    max-width: 100%;
+    flex-shrink: 0;
+}
+.top-menu{
+    display: flex;
+}
+
+.menu-items{
+    display: block;
+    color: honeydew;
+    border-bottom: 1px solid gray;
+    width: 100%;
+    padding: 8px;
+}
+
+.user-menu-path{
+    display: flex;
+}
+.user-menu-path a{
+padding-left: 10px;
+}
+.user-menu-path i {
+    padding: 7px;
+}

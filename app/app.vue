@@ -7,19 +7,7 @@
 
         <!-- ЛЕВОЕ МЕНЮ -->
         <f7-panel left reveal resizable v-if="Store.globalRouter.navigate">
-            <f7-view>
-                <f7-page class="big">
-                    <f7-block>Hello!</f7-block>
-                    <f7-link v-if="!Store.user.isLogged" panel-close="left"
-                        @click="Store.globalRouter.navigate('/login')">Enter</f7-link>
-                    <f7-link v-else panel-close="left" @click="Store.globalRouter.navigate('/cabinet')">{{Store.user.login}}
-                    </f7-link>
-                    <br>
-                    <f7-link panel-close="left" @click="Store.globalRouter.navigate('/')">Main page</f7-link>
-                    <br>
-                   <f7-link panel-close="left" @click="Store.logOut()" v-if="Store.user.isLogged"> Exit <i class="txt-red fa fa-sign-out txt-red hovered" aria-hidden="true"></i></f7-link>
-                </f7-page>
-            </f7-view>
+            <main-menu></main-menu>
         </f7-panel>
         <!-- КОНЕЦ ЛЕВОЕ МЕНЮ -->
         <!-- <modal></modal> -->
@@ -32,24 +20,28 @@
 import Vue from 'vue';
 import Store from './core/Store';
 import routes from './core/routes';
+import mainMenu from './components/menu.vue';
 
 export default {
+    components: {
+        mainMenu
+    },
     data() {
-      return {
-          Store,
-        // Framework7 parameters that we pass to <f7-app> component
-        f7params: {
-          name: 'My Application',
-          theme: 'ios',
-          id: 'com.myapp.test',
-          'theme-dark': true,
-          routes
+        return {
+            Store,
+            // Framework7 parameters that we pass to <f7-app> component
+            f7params: {
+                name: 'My Application',
+                theme: 'ios',
+                id: 'com.myapp.test',
+                'theme-dark': true,
+                routes
+            }
         }
-      }
     }
-  }
+}
 
-  setTimeout(() => {
+setTimeout(() => {
     // Store.globalRouter.navigate('/cabinet')
-  }, 3000);
+}, 3000);
 </script>
