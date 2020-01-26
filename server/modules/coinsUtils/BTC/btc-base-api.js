@@ -63,7 +63,6 @@ module.exports = class BtcBaseApi {
    */
     createTransaction (address = '', amount = 0, fee) {
         return this.getUnspents().then(unspents => {
-            console.log({unspents});
             const hex = this._buildTransaction(address, amount, unspents, fee);
 
             let txid = bitcoin.crypto.sha256(Buffer.from(hex, 'hex'));

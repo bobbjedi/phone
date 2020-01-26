@@ -1,11 +1,13 @@
 require('./BIP/checkerTx');
 require('./ETH/checkerTx');
+require('./BTC/checkerTx');
 const Db = require('../DB');
 const $u = require('../../helpers/utils');
 const log = require('../../helpers/log');
 const {withdrawComission, coinsTradeLimits} = require('../../helpers/configReader');
 const Store = require('../../helpers/Store');
 const api = {
+    BTC: require('./BTC/api'),
     BIP: require('./BIP/api'),
     ETH: require('./ETH/api'),
     USDT: require('./ETH/USDT')
@@ -68,8 +70,3 @@ function validError(user, coinName, amount){
         return 'Недостаточно средств для вывода!';
     }
 }
-
-
-// setTimeout(async ()=>{
-//     console.log('withdraw:', await module.exports.withdraw('I5CDVixfOVHWKKnE', {coinName: 'ETH', amount: 0.001}));
-// }, 1000);

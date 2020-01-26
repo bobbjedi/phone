@@ -29,7 +29,10 @@ module.exports = {
         user.openOrders = {};
         user.closeOrders = {};
         const {deposits} = user;
-        config.knownCoins.forEach(c=> deposits[c].pending = deposits[c].free = 0);
+        config.knownCoins.forEach(c=> {
+            deposits[c] = deposits[c] || {balance: 0};
+            deposits[c].pending = deposits[c].free = 0;
+        });
         if (openOrders){
             for (const pairName of config.tradePairs){
                 user.openOrders[pairName] = await DB[pairName + '_Depth'].db.syncFind({user_id: user._id});

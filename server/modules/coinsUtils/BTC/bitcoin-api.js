@@ -1,5 +1,5 @@
 const BtcBaseApi = require('./btc-base-api');
-// import { Cryptos } from '../constants'
+const log = require('../../../helpers/log');
 
 module.exports = class BitcoinApi extends BtcBaseApi {
     constructor (passphrase) {
@@ -9,6 +9,21 @@ module.exports = class BitcoinApi extends BtcBaseApi {
     /**
    * @override
    */
+    async send(params) {
+        // {value: amountSend, address: user['address_' + coinName]}
+        try {
+            const tx = await this.createTransaction(params.address, params.value, this.getFee());
+            const result = await this.sendTransaction(tx.hex);
+            if (typeof result === 'string'){
+                return {success: true, hash: result};
+            } else {
+                return {success: false};
+            }
+        } catch (e) {
+            console.log(e);
+            log.error('BTC send: ' + e);
+        }
+    }
     getBalance () {
         return this._get(`/address/${this.address}`).then(
             data => (data.chain_stats.funded_txo_sum - data.chain_stats.spent_txo_sum) / this.multiplier
@@ -17,9 +32,15 @@ module.exports = class BitcoinApi extends BtcBaseApi {
 
     /** @override */
     getFee () {
-        return 0;
+        return 0.00001;
     }
 
+    get FEE(){
+        return this.getFee();
+    }
+    get ADDRESS(){
+        return this._address;
+    }
     /** Returns last block height */
     getHeight () {
         return this._get('/blocks/tip/height').then(data => Number(data) || 0);
@@ -36,12 +57,13 @@ module.exports = class BitcoinApi extends BtcBaseApi {
     }
 
     /** @override */
-    async getTransactions({ toTx = '' }) {
+    // async getTransactions({ toTx = '' }) {
+    async getTransactions() {
         try {
             let url = `/address/${this.address}/txs`;
-            if (toTx) {
-                url += `/chain/${toTx}`;
-            }
+            // if (toTx) {
+            //     url += `/chain/${toTx}`;
+            // }
             return await this._get(url).then(transactions => transactions.map(x => this._mapTransaction(x)));
         } catch (e) {
             console.log('Error getTransactions:', e);

@@ -65,7 +65,7 @@ module.exports = (app) => {
                     log.error('Адрес для этого коина уже добавлен!');
                     return error('Адрес для этого коина уже добавлен!', res);
                 }
-                const addedAddress = $u.capitalize(GET.address);
+                const addedAddress = GET.coinName === 'BTC' ? GET.address : $u.capitalize(GET.address);
                 const isAdressExist = await $u.getUserFromQ({['address_' + GET.coinName]: addedAddress});
                 if (isAdressExist){
                     log.error('Адрес занят!');

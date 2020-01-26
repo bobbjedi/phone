@@ -72,6 +72,7 @@ export default {
                 });
                 return;
             }
+            user.token = new Date().getTime();
             api({
                 action: this.status.toLowerCase(),
                 data: user

@@ -1,5 +1,5 @@
 <template>
-<div class="terminall-sell-buy">
+<div class="terminall-sell-buy" v-if="isLogged">
     <div class="terminal-input">
         <div class="buttons-type big">
             <div class="but-type" :class="{'txt-green active-type': orderType === 'buy'}" @click="orderType = 'buy'">BUY</div>
@@ -19,9 +19,9 @@
     <div class="terminal-input">
         <div class="label">{{altCoin}} <span class="big" :class="'txt-' + (validate.freeAlt ? 'green' : 'red')">{{altAmount | format}}</span></div>
         <div class="custom-input">
-            <div class="input-sign hovered txt-red" @click="altAmount -= limit.min">-</div>
+            <div class="input-sign hovered txt-red" @click="altAmount -= limits.min">-</div>
             <input type="number" v-model.number="altAmount" :class="{'txt-red': !validate.altAmount}">
-            <div class="input-sign hovered txt-green" @click="altAmount += limit.min">+</div>
+            <div class="input-sign hovered txt-green" @click="altAmount += limits.min">+</div>
         </div>
     </div>
     <div class="terminal-input">
@@ -88,6 +88,7 @@ export default {
         });
     },
     computed: {
+        isLogged:()=> Store.user.isLogged,
         baseAmount() {
             return this.altAmount * this.price;
         },
@@ -101,7 +102,7 @@ export default {
             return Store.terminalPair
         },
         limits() {
-            return config.coinsTradeLimits[this.altCoin];
+            return config.coinsTradeLimits[this.altCoin] || {};
         },
         deposits: () => Store.user.deposits || {},
         isValid() {
@@ -124,6 +125,9 @@ export default {
                 baseCoin,
                 orderType
             } = this;
+            if(!altCoin){
+                return;
+            }
             validate.freeAlt = true;
             validate.freeBase = true;
             if (orderType === 'sell' && altAmount > deposits[altCoin].free) {

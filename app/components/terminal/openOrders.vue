@@ -26,9 +26,10 @@ export default {
     computed: {
         pairName: () => Store.terminalPair,
         pairData() {
+            // автоподстройка по высоте
             mathHeight('.block-open-orders');
             mathHeight('.block-history-orders');
-            return Store.user.openOrders[this.pairName] || {};
+            return Store.user.openOrders && Store.user.openOrders[this.pairName] || {};
         }
     },
     methods: {

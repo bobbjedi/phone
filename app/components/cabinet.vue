@@ -52,14 +52,17 @@
                     Будте внимательны! Убедитесь, что средства будут переведены с Вашего кошелька <span class="txt-yellow">{{user['address_' + activeCoinName]}}</span>! Иначе средства могут быть утеряны!
                 </f7-block>
                 <f7-block>
-                    <p>Для пополнения Вашего счета {{activeCoinName}} необходимо отправить необходимое количество {{activeCoinName}} на 
+                    <p>Для пополнения Вашего счета {{activeCoinName}} необходимо отправить необходимое количество {{activeCoinName}} на
                         <span class="txt-green small">{{addresses[activeCoinName]}}</span>
                         <i @click="copy(addresses[activeCoinName])" class="fa fa-clone txt-blue" aria-hidden="true"></i>
                         .</p>
                 </f7-block>
             </span>
             <f7-block v-if="popupMethod === 'withdraw'">
-                <p>Комиссия на вывод составляет {{config.withdrawComission}}%</p>
+                <f7-block strong>
+                    <p>Будьте внимательны! Вывод будет осуществлен на Ваш адрес <span class="small txt-green">{{user['address_' + activeCoinName]}}</span></p>
+                    <p>Комиссия на вывод составляет {{config.withdrawComission}}%</p>
+                </f7-block>
                 <f7-list no-hairlines-md>
                     <f7-list-input @input="withdrawAmunt = +$event.target.value" :label="'Вывести ' + activeCoinName" type="text" placeholder="Количество" :info="'Доступно: ' + user.deposits[activeCoinName].free" error-message="Только цыфры!" required validate pattern="^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$" clear-button>
                     </f7-list-input>
@@ -136,15 +139,23 @@ export default {
         },
 
         addAddress() {
-            const {addedAddress, activeCoinName} = this;
+            const {
+                addedAddress,
+                activeCoinName
+            } = this;
             let isValid = true;
-            if (activeCoinName === 'BIP') {
-                if (!addedAddress.startsWith('Mx')) {
-                    isValid = false;
-                }
-            } else if (!addedAddress.startsWith('0x')) {
+            if (!addedAddress.startsWith('Mx') && activeCoinName === 'BIP') {
                 isValid = false;
             }
+
+            if (activeCoinName === 'BTC' && !addedAddress.startsWith('1')) {
+                isValid = false;
+            }
+
+            if (['ETH', 'USDT'].includes(activeCoinName) && !addedAddress.startsWith('0x')) {
+                isValid = false;
+            }
+
             if (!isValid) {
                 Store.notify({
                     type: 'error',
@@ -175,7 +186,11 @@ export default {
         },
 
         withdraw() {
-            const {withdrawAmunt, user, activeCoinName} = this;
+            const {
+                withdrawAmunt,
+                user,
+                activeCoinName
+            } = this;
             if (withdrawAmunt > user.deposits[activeCoinName].free) {
                 Store.notify({
                     type: 'error',
