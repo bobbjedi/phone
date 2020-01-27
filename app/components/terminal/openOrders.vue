@@ -63,6 +63,7 @@ export default {
 }
 
 function mathHeight(className) {
+    return;
     setTimeout(() => {
         const el = document.querySelector(className);
         if (!el) {
