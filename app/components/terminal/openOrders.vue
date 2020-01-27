@@ -61,7 +61,7 @@ export default {
         }
     }
 }
-let fixed = false;
+let fixed = true;
 function mathHeight(className) {
     if(fixed){
         return;

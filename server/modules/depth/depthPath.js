@@ -173,6 +173,7 @@ module.exports = class {
                 currentPrice = this.prices[opposite][0]; // очередная цена
             } catch (e) {
                 delete Store.usersBlockedActions[taker._id];
+                console.log(e);
                 log.error('set BUY/SELL ' + e);
                 return false;
             }
