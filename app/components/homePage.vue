@@ -38,7 +38,7 @@
     </div>
 
     <!-- Терминал -->
-    <f7-popup class="char-popup-swipe" swipe-to-close :opened="isOpenTerminal" @popup:closed="isOpenTerminal = false">
+    <f7-popup class="char-popup-swipe" :opened="isOpenTerminal" @popup:closed="isOpenTerminal = false">
         <f7-page>
             <f7-navbar :title="'Trading ' + terminalPair">
                 <f7-nav-right>

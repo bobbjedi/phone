@@ -23,11 +23,11 @@ import Store from '../../core/Store';
 import api from '../../core/api';
 
 export default {
-    mounted(){
-        Store.$watch('isOpenTerminal', bool =>{
-            if(bool){
-            mathHeight('.block-open-orders');
-            mathHeight('.block-history-orders');
+    mounted() {
+        Store.$watch('isOpenTerminal', bool => {
+            if (bool) {
+                mathHeight('.block-open-orders');
+                mathHeight('.block-history-orders');
             }
         });
     },
@@ -61,9 +61,12 @@ export default {
         }
     }
 }
-
+let fixed = false;
 function mathHeight(className) {
-    return;
+    if(fixed){
+        return;
+    }
+    fixed = true;
     setTimeout(() => {
         const el = document.querySelector(className);
         if (!el) {
@@ -72,6 +75,6 @@ function mathHeight(className) {
         const windowHeight = parseInt(document.documentElement.clientHeight);
         const y = el.getBoundingClientRect().height;
         el.style.maxHeight = (windowHeight - y - 36) + 'px';
-    }, 3000);
+    }, 2000);
 }
 </script>
