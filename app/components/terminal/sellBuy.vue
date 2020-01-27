@@ -11,17 +11,17 @@
             {{altCoin}}:{{deposits[altCoin].free | format}}
         </div>
         <div class="custom-input">
-            <div class="input-sign hovered txt-red" @click="price--">-</div>
+            <div class="input-sign hovered txt-red" @click="price -= steps.price">-</div>
             <input type="number" v-model.number="price">
-            <div class="input-sign hovered txt-green" @click="price++">+</div>
+            <div class="input-sign hovered txt-green" @click="price += steps.price">+</div>
         </div>
     </div>
     <div class="terminal-input">
         <div class="label">{{altCoin}} <span class="big" :class="'txt-' + (validate.freeAlt ? 'green' : 'red')">{{altAmount | format}}</span></div>
         <div class="custom-input">
-            <div class="input-sign hovered txt-red" @click="altAmount -= limits.min">-</div>
+            <div class="input-sign hovered txt-red" @click="altAmount -= steps.amount">-</div>
             <input type="number" v-model.number="altAmount" :class="{'txt-red': !validate.altAmount}">
-            <div class="input-sign hovered txt-green" @click="altAmount += limits.min">+</div>
+            <div class="input-sign hovered txt-green" @click="altAmount += steps.amount">+</div>
         </div>
     </div>
     <div class="terminal-input">
@@ -104,6 +104,9 @@ export default {
         limits() {
             return config.coinsTradeLimits[this.altCoin] || {};
         },
+        steps() {
+            return config.tradeSteps[this.pairName] || {};
+        },
         deposits: () => Store.user.deposits || {},
         isValid() {
             for (const m in this.validate) {
@@ -137,6 +140,8 @@ export default {
             if (orderType === 'buy' && (altAmount * price) > deposits[baseCoin].free) {
                 validate.freeBase = false;
             }
+            this.altAmount = $u.round(this.altAmount);
+            this.price = $u.round(this.price);
         },
         validateAmount() {
             const {
