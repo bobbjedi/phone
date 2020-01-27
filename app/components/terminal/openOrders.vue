@@ -23,12 +23,18 @@ import Store from '../../core/Store';
 import api from '../../core/api';
 
 export default {
+    mounted(){
+        Store.$watch('isOpenTerminal', bool =>{
+            if(bool){
+            mathHeight('.block-open-orders');
+            mathHeight('.block-history-orders');
+            }
+        });
+    },
     computed: {
         pairName: () => Store.terminalPair,
         pairData() {
             // автоподстройка по высоте
-            mathHeight('.block-open-orders');
-            mathHeight('.block-history-orders');
             return Store.user.openOrders && Store.user.openOrders[this.pairName] || {};
         }
     },
@@ -63,8 +69,8 @@ function mathHeight(className) {
             return;
         }
         const windowHeight = parseInt(document.documentElement.clientHeight);
-        const y = el.getBoundingClientRect().y;
+        const y = el.getBoundingClientRect().height;
         el.style.maxHeight = (windowHeight - y - 36) + 'px';
-    }, 1000);
+    }, 3000);
 }
 </script>
