@@ -14,9 +14,10 @@
         </f7-block>
         <f7-block class="menu-list">
             <f7-link class="menu-items" panel-close="left" @click="Store.globalRouter.navigate('/')">Главная страница</f7-link>
-            <f7-link class="menu-items" panel-close="left" @click="Store.globalRouter.navigate('/cabinet')">Кабинет</f7-link>
-            <f7-link class="menu-items" panel-close="left" @click="Store.globalRouter.navigate('/')">Политика безопасности</f7-link>
-            <f7-link class="menu-items" panel-close="left" @click="Store.globalRouter.navigate('/')">О нас</f7-link>
+            <f7-link class="menu-items" panel-close="left" @click="Store.globalRouter.navigate(Store.user.isLogged ? '/cabinet' : '/login')">Кабинет</f7-link>
+            <f7-link class="menu-items" panel-close="left" @click="Store.globalRouter.navigate('/security')">Политика безопасности</f7-link>
+            <f7-link class="menu-items" panel-close="left" @click="Store.globalRouter.navigate('/contacts')">Контакты</f7-link>
+            <f7-link class="menu-items" panel-close="left" @click="Store.globalRouter.navigate('/about')">О нас</f7-link>
         </f7-block>
     </f7-page>
 </f7-view>

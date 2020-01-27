@@ -183,3 +183,8 @@ padding-left: 10px;
 .user-menu-path i {
     padding: 7px;
 }
+
+.slide img{
+    max-width: 100%;
+    max-height: 100%;
+}

@@ -8,9 +8,9 @@
     <br>
     <f7-block>
         <f7-swiper pagination navigation scrollbar id="main-slider">
-            <f7-swiper-slide class="slide">Slide 1</f7-swiper-slide>
-            <f7-swiper-slide class="slide">Slide 2</f7-swiper-slide>
-            <f7-swiper-slide class="slide">Slide 3</f7-swiper-slide>
+            <f7-swiper-slide class="slide"><img src="img/slide1.jpg"></f7-swiper-slide>
+            <f7-swiper-slide class="slide"><img src="img/slide2.jpg"></f7-swiper-slide>
+            <f7-swiper-slide class="slide"><img src="img/slide3.jpg"></f7-swiper-slide>
         </f7-swiper>
     </f7-block>
 
