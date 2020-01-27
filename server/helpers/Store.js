@@ -23,7 +23,7 @@ module.exports = {
             const history = (await Db[c + '_CloseOrders']
                 .find({isTaker: true}))
                 .sort((a, b) => b.time - a.time)
-                .slice(0, 20)
+                .slice(0, 15)
                 .map(o=>{
                     return {
                         time: o.time,
