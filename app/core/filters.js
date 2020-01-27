@@ -26,7 +26,7 @@ Vue.filter('format', (num)=>{
         fixed = 8;
     } else if (num <= 0.001) {
         fixed = 6;
-    } else if (num <= 0.01) {
+    } else if (num <= 0.09) {
         fixed = 4;
     }
     if (+num === 0){
