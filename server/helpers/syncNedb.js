@@ -76,6 +76,16 @@ module.exports = {
                     });
                 });
             }
+            async remove () {
+                return new Promise(resolve => {
+                    db.remove({_id: this._id}, (err, doc)=>{
+                        if (err){
+                            resolve(false);
+                        }
+                        resolve(true);
+                    });
+                });
+            }
             static findOne (a) {
                 return new Promise(resolve => {
                     db.findOne(a, (err, doc) => {
