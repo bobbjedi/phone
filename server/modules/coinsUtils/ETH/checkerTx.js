@@ -39,7 +39,7 @@ const checker = async coinName =>{
         try {
             const data = JSON.parse(body);
             if (!data.result || !data.result.length){
-                console.log('coinName Error:', data);
+                // console.log('coinName Error:', data);
                 return;
             }
             const txs = data.result;
