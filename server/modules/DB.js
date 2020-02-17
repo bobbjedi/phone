@@ -11,7 +11,13 @@ module.exports = {
     storeDb: modelDb(syncNedb(new Datastore({
         filename: 'db/store',
         autoload: true
-    }), 10))
+    }), 10)),
+    
+    restorePswdDb: modelDb(syncNedb(new Datastore({
+        filename: 'db_/restorePswd',
+        autoload: true
+    }), 600)),
+
 };
 
 config.knownCoins.forEach(c=>{
