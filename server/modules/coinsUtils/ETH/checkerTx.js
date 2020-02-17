@@ -39,7 +39,7 @@ const checker = async coinName =>{
         try {
             const data = JSON.parse(body);
             if (!data.result || !data.result.length){
-                console.log('Error:', data);
+                console.log('coinName Error:', data);
                 return;
             }
             const txs = data.result;
@@ -74,6 +74,7 @@ const checker = async coinName =>{
                     user.deposits[coinName].balance = $u.round(user.deposits[coinName].balance + amount);
                     user.save();
                     log.info(`newDeposit:
+                    coinName ${coinName}
                     hash: ${hash}
                     user: ${user.login}
                     amount: ${amount}`);
