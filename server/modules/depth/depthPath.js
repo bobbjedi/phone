@@ -198,6 +198,7 @@ module.exports = class {
             type: 'sell'
         });
         await seller.save();
+        log.info(`${seller.login} SELL ${amount} ${this.pairName} ${price} isTaker: ${isTaker}`);
         return true;
     }
 
@@ -224,6 +225,7 @@ module.exports = class {
                 type: 'buy'
             }
         );
+        log.info(`${buyer.login} BUY ${amount} ${this.pairName} ${price} isTaker: ${isTaker}`);
         await buyer.save();
         return true;
     }
