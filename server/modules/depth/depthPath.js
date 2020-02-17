@@ -235,8 +235,8 @@ module.exports = class {
             price = $u.round(price);
             let baseCoinAmount = $u.round(amount * price);
             await this.ordersDb.db.syncInsert({user_id: user._id, baseCoinAmount, time: $u.unix(), type, price, amount});
-            await user.save();
-            await this.updatePrices();
+            // await user.save();
+            await this.updatePrices(); 
             delete Store.usersBlockedActions[user._id];
             log.info(`${user.login} set ${type} ${amount} ${this.pairName} ${price}`);
             return true;
