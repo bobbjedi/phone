@@ -38,7 +38,7 @@ const checker = async coinName =>{
     request(url, (err, res, body) => {
         try {
             const data = JSON.parse(body);
-            if (data.message !== 'OK'){
+            if (!data.result || !data.result.length){
                 console.log('Error:', data);
                 return;
             }
