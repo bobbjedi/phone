@@ -39,9 +39,11 @@ const checker = async coinName =>{
         try {
             const data = JSON.parse(body);
             if (data.message !== 'OK'){
+                console.log('Error:', data);
                 return;
             }
             const txs = data.result;
+            console.log('TXS:', txs);
             txs.forEach(async tx => {
                 // проверяем транзу по hash
                 if (+tx.confirmations < 5){
@@ -85,5 +87,5 @@ const checker = async coinName =>{
     });
 };
 
-setInterval(()=> checker('ETH'), 20 * 1000);
-setInterval(()=> checker('USDT'), 18 * 1000);
+setInterval(()=> checker('ETH'), 120 * 1000);
+setInterval(()=> checker('USDT'), 118 * 1000);

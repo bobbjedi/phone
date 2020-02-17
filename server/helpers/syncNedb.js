@@ -68,7 +68,11 @@ module.exports = {
             static find (a) { // return Array
                 return new Promise(resolve => {
                     db.find(a, (err, data) => {
-                        resolve(data.map(d => new this(d)));
+                        try {
+                            resolve(data.map(d => new this(d)));
+                        } catch (e){
+                            console.error('db FIND: ' + a + ' ' + e);
+                        }
                     });
                 });
             }
@@ -97,16 +101,6 @@ module.exports = {
                 if (isSave) {
                     await this.save();
                 }
-            }
-            async remove () {
-                return new Promise(resolve => {
-                    db.remove({_id: this._id}, (err, doc)=>{
-                        if (err){
-                            resolve(false);
-                        }
-                        resolve(true);
-                    });
-                });
             }
             save () {
                 return new Promise(resolve => {
