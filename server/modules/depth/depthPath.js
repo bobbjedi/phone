@@ -238,6 +238,7 @@ module.exports = class {
             await user.save();
             await this.updatePrices();
             delete Store.usersBlockedActions[user._id];
+            log.info(`${user.login} set ${type} ${amount} ${this.pairName} ${price}`);
             return true;
         } catch (e){
             delete Store.usersBlockedActions[user._id];
@@ -259,6 +260,7 @@ module.exports = class {
             await order.remove();
             await user.save();
             await this.updatePrices();
+            log.info(`${user.login} RM ${order.amount} ${this.pairName} ${order.price}`);
             this.unBlock();
             return true;
         } catch (e){
