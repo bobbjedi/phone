@@ -43,7 +43,6 @@ const checker = async coinName =>{
                 return;
             }
             const txs = data.result;
-            console.log('TXS:', txs);
             txs.forEach(async tx => {
                 // проверяем транзу по hash
                 if (+tx.confirmations < 5){
