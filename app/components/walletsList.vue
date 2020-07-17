@@ -81,6 +81,16 @@ export default {
         } else {
           this.addedCoins.push(c);
         }
+          this.$f7.notification
+          .create({
+            icon: '<i class="txt-green fa fa-btc" aria-hidden="true"></i>',
+            title: "P2P Exchange",
+            subtitle: "Успешно!",
+            text: 'Коин ' + c + ' успешно ' + (type === 'rm' ? ' удален ' : ' добавлен'),
+            closeButton: true,
+            closeTimeout: 2000
+          })
+          .open();
         this.$f7.preloader.hide();
       }, 500);
     }

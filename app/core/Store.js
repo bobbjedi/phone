@@ -38,7 +38,7 @@ export default new Vue({
         },
         loadWalletsData(){
             this.$f7.preloader.show();
-            setTimeout(() => this.$f7.preloader.hide(), 1000);
+            setTimeout(() => this.$f7.preloader.hide(), 2000);
             this.walletsData = {
                 totalDeposit: 1487488,
                 crypto: [

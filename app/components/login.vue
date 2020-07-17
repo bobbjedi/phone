@@ -69,9 +69,10 @@ export default {
       }
       Store.user.login = login;
       Store.user.isLogged = true;
-      app.loginScreen.close();
+     
       Store.loadWalletsData();
       setTimeout(() => {
+        app.loginScreen.close();
         app.notification
           .create({
             icon: '<i class="txt-green fa fa-btc" aria-hidden="true"></i>',
@@ -79,10 +80,10 @@ export default {
             subtitle: "Успешный вход!",
             text: "Здравcтсвуйте, " + login + "!",
             closeButton: true,
-            closeTimeout: 3000
+            closeTimeout: 2000
           })
           .open();
-      });
+      }, 3000);
     }
   }
 };

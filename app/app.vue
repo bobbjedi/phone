@@ -28,7 +28,7 @@ export default {
         f7params: {
            name: 'P2P Exchange',
           //  App theme. Can be ios, md, aurora or auto. In case of auto it will use iOS theme for iOS devices, Aurora theme for desktop device running in Electron environment, and MD theme for all other devices.
-                theme: 'ios',
+                theme: 'md',
                 id: 'com.myapp.test',
                 'theme-dark': false,
                 routes
