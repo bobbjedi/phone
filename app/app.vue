@@ -26,10 +26,12 @@ export default {
           Store,
         // Framework7 parameters that we pass to <f7-app> component
         f7params: {
-          name: 'My Application',
-          theme: 'ios',
-          id: 'com.myapp.test',
-          routes
+           name: 'P2P Exchange',
+          //  App theme. Can be ios, md, aurora or auto. In case of auto it will use iOS theme for iOS devices, Aurora theme for desktop device running in Electron environment, and MD theme for all other devices.
+                theme: 'ios',
+                id: 'com.myapp.test',
+                'theme-dark': false,
+                routes
         }
       }
     }

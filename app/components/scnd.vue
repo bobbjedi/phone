@@ -1,10 +1,10 @@
 <template>
     <f7-page :page-content="false">
-        <f7-navbar title="Animated Tabs" back-link="Back">
-            <f7-nav-right>
-                <f7-button raised panel-open="left">Menu</f7-button>
-            </f7-nav-right>
-        </f7-navbar>
+<f7-navbar title="My App" back-link="Back">
+  <f7-nav-right>
+    <f7-link f7="icon-bars" panel-open="left"></f7-link>
+  </f7-nav-right>
+</f7-navbar>
         <f7-toolbar tabbar bottom>
             <f7-link tab-link="#tab-1" tab-link-active>Tab 1</f7-link>
             <f7-link tab-link="#tab-2">Tab 2</f7-link>

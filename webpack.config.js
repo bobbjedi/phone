@@ -1,8 +1,7 @@
 /* eslint-disable*/
 const path = require('path');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
-const {exec} = require('child_process');
-const Dist = path.resolve(__dirname, './server/cordova/www/js');
+const Dist = path.resolve(__dirname, './public/');
 const isDev = process.argv[3] === 'development';
 let ls;
 
@@ -30,7 +29,15 @@ module.exports = {
         },{
             test: /\.vue$/,
             loader: 'vue-loader'
-          }]
+          },
+        {
+            test: /\.css$/,
+            use: ['style-loader', 'css-loader'],
+        },
+        {
+            test: /\.(woff|woff2|eot|ttf|otf|svg)$/,
+            loader: 'url-loader'
+        }]
     },
     resolve: {
         alias: {

@@ -1,5 +1,5 @@
 import homePage from '../components/homePage.vue';
-import frst from '../components/frst.vue';
+import walletsList from '../components/walletsList.vue';
 import scnd from '../components/scnd.vue';
 console.log('qwert');
 export default [{
@@ -7,8 +7,8 @@ export default [{
     component: homePage,
 },
 {
-    path: '/frst/',
-    component: frst,
+    path: '/wallets-list',
+    component: walletsList,
 },
 {
     path: '/scnd',
