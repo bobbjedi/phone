@@ -13,3 +13,5 @@ server/cordova/www/js/build.js
 server/cordova/www/www.zip
 server/cordova/package.json
 server/cordova/node_modules
+public/build.js
+public/public.zip
