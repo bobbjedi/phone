@@ -18,29 +18,19 @@
       </f7-list-item>
     </f7-list>
     <div class="button-wrapper" block>
-       <f7-button fill round  @click="navigate('/wallets-list')">Добавить еще</f7-button>
+       <f7-button class="bg-blue" fill round  @click="navigate('/wallets-list')">Добавить еще</f7-button>
     </div>
-    <f7-row class="buttons-row">
-      <f7-col class="bottom-menu-item">
-        <i class="fa fa-connectdevelop bigbig" aria-hidden="true"></i>
-        <span>Кошелек</span>
-      </f7-col>
-      <f7-col class="bottom-menu-item">
-        <i class="fa fa-exchange bigbig" aria-hidden="true"></i>
-        <span>Обмен</span>
-      </f7-col>
-      <f7-col class="bottom-menu-item">
-        <i class="fa fa-handshake-o bigbig" aria-hidden="true"></i>
-        <span>Услуги</span>
-      </f7-col>
-    </f7-row>
+    <bottom-menu></bottom-menu>
   </div>
 </template>
 
 <script>
 import Store from "../core/Store";
-
+import bottomMenu from './bottom-menu.vue';
 export default {
+    components:{
+        bottomMenu
+    },
   data() {
     return {};
   },
@@ -58,7 +48,7 @@ export default {
   height: 100%;
 }
 .total-deposit-block {
-  background: mediumseagreen;
+  background: #3b3b56;
   padding: 15px;
 }
 
@@ -86,8 +76,5 @@ export default {
   display: flex;
   flex-direction: column;
 }
-.button-wrapper{
-  margin: 5px;
-  padding: 0 8%;
-}
+
 </style>

@@ -1,13 +1,8 @@
 import Datastore from './modules/nedb';
-import {syncNedb, modelDb} from './modules/modelNeDb';
+import { syncNedb, modelDb } from './modules/modelNeDb';
 
 
-// export default syncNedb(new Datastore({
-//     filename: 'db/items',
-//     autoload: true
-// }));
-
-export default modelDb(syncNedb(new Datastore({
-    filename: 'db/itemsDb',
+export const ordersDb = modelDb(syncNedb(new Datastore({
+    filename: 'db/ordersDb',
     autoload: true
 }), 10));

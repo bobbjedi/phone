@@ -18,36 +18,42 @@ Vue.filter('round', v => {
     return +v.toFixed(8);
 });
 
-Vue.filter('format', (num)=>{
-    if (!num){
-        num = 0;
-    }
-    let fixed = 2;
-    if (num <= 0.00001) {
-        fixed = 8;
-    } else if (num <= 0.001) {
-        fixed = 6;
-    } else if (num <= 0.09) {
-        fixed = 4;
-    }
-    if (+num === 0){
-        return '0.00';
-    }
-    var parts = num.toFixed(fixed).split('.'),
-        main = parts[0],
-        len = main.length,
-        output = '',
-        i = len - 1;
-    while (i >= 0) {
-        output = main.charAt(i) + output;
-        if ((len - i) % 3 === 0 && i > 0) {
-            output = ',' + output;
+Vue.filter('format', num => {
+    const getNum = num;
+    try {
+        if (!num){
+            num = 0;
         }
-        --i;
+        let fixed = 2;
+        if (num <= 0.00001) {
+            fixed = 8;
+        } else if (num <= 0.001) {
+            fixed = 6;
+        } else if (num <= 0.09) {
+            fixed = 4;
+        }
+        if (+num === 0){
+            return '0.00';
+        }
+        var parts = num.toFixed(fixed).split('.'),
+            main = parts[0],
+            len = main.length,
+            output = '',
+            i = len - 1;
+        while (i >= 0) {
+            output = main.charAt(i) + output;
+            if ((len - i) % 3 === 0 && i > 0) {
+                output = ',' + output;
+            }
+            --i;
+        }
+        if (parts.length > 1) {
+            output = `${output}.${parts[1]}`;
+        }
+        return output;
+    } catch (error) {
+        // console.log('Filter format error', getNum, error);
+        return 0;
     }
-    if (parts.length > 1) {
-        output = `${output}.${parts[1]}`;
-    }
-    return output;
 });
 

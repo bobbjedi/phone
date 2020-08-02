@@ -1,17 +1,16 @@
-import homePage from '../components/homePage.vue';
-import walletsList from '../components/walletsList.vue';
-import scnd from '../components/scnd.vue';
-console.log('qwert');
+import exchange from '../components/exchange.vue';
+import enterPayData from '../components/enter-pay-data.vue';
+import makePayment from '../components/make-payment.vue';
+
 export default [{
     path: '/',
-    component: homePage,
+    component: exchange,
+}, {
+    path: '/enter-pay-data',
+    component: enterPayData,
 },
 {
-    path: '/wallets-list',
-    component: walletsList,
-},
-{
-    path: '/scnd',
-    component: scnd,
+    path: '/make-payment',
+    component: makePayment,
 }
 ];

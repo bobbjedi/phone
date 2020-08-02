@@ -1,86 +1,74 @@
 import Vue from 'vue';
 import api from './api';
+import config from '../../config';
+import _ from 'underscore';
+import {ordersDb} from './localDb';
+import io from 'socket.io-client';
 
 export default new Vue({
-    created() {
-        this.user.token = localStorage.getItem('wstoken') || false;
-        if (this.user.token) {
-            this.updateUser();
-        } else {
-            this.isLoad = true;
-        }
-        Vue.prototype.navigate = v => this.globalRouter.navigate(v);
+    async created() {
+        Vue.prototype.navigate = v => this.$f7router.navigate(v);
+        this.getCurencyesData();
+        setTimeout(()=>api('ordersHistory', {page: 1}, console.log), 1000);
+        console.log('ordersDb', await ordersDb.find({}));
+        (await ordersDb.find({})).forEach(o => this.addOrderListenner(o));
     },
     data: {
+        exchangeData: {
+            fromCoin: '',
+            toCoin: '',
+            fromCoinAmount: 0,
+            toCoinAmount: 0,
+            tiker: {}
+        }, // данные для обмена
         currentRoute: '/',
-        isLoad: false,
         globalRouter: {},
         user: {
-            login: '',
+            email_validated: false,
+            userName: '',
+            email: '',
             isLogged: false
         },
-        walletsData: {}
+        curencyes: [],
+        tikers: [],
+        listenOrders: {}
     },
     methods: {
-        updateUser(cb = false) {
-            this.isLoad = true;
-            const self = this;
-            api({
-                action: 'getUser',
-                token: this.user.token
-            }, (data) => {
-                self.user = data;
-            }, true);
-        },
         logOut() {
             this.user.isLogged = false;
-            this.user.token = false;
+            this.tokens = false;
         },
-        loadWalletsData(){
-            this.$f7.preloader.show();
-            setTimeout(() => this.$f7.preloader.hide(), 2000);
-            this.walletsData = {
-                totalDeposit: 1487488,
-                crypto: [
-                    {
-                        coinName: 'BTC',
-                        deposit: 0.23,
-                        price: 9.95456,
-                        percent: +0.34
-                    },
-                    { coinName: 'USDT',
-                        deposit: 1324.23,
-                        price: 0.998,
-                        percent: -0.17
-                    },
-                    {
-                        coinName: 'NEO',
-                        deposit: 1.23,
-                        price: 0.85456,
-                        percent: -1.13
-                    },
-                    { coinName: 'DASH',
-                        deposit: 0,
-                        price: 9.45456,
-                        percent: +1.34
-                    },
-                    { coinName: 'EOS',
-                        deposit: 0,
-                        price: 0.65456,
-                        percent: -0.34
-                    },
-                    { coinName: 'QTUM',
-                        deposit: 0,
-                        price: 2.65456,
-                        percent: -0.89
-                    },
-                ]
-            };
-        }
-    },
-    watch: {
-        'user.token'() {
-            localStorage.setItem('wstoken', this.user.token);
+        getCurencyesData(){
+            api('curencyes', {}, res => {
+                if (res.success) {
+                    console.log(res.data);
+                    this.curencyes = res.data;
+                }
+            });
+        },
+        addOrderListenner(order) {
+            const { uid } = order;
+            getOrderData(uid, res => {
+                const {data} = res;
+                order.update(data, 1);
+                const socket = io(config.domain + '/order/status/');
+                socket.send(JSON.stringify({ id: order.uid }));
+                socket.on('status/' + order.uid, msg => getOrderData(uid, data => order.update(data, 1))); // обновляем
+                console.log('set listenner', order.uid);
+                this.listenOrders[order.id] = {
+                    id: order.id,
+                    socket
+                };
+            });
         }
     }
 });
+
+
+const getOrderData = (uid, cb)=>{
+    api('current', {url: 'order/' + uid}, res => {
+        if (res.success){
+            cb(res.data);
+        }
+    });
+};

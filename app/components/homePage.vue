@@ -1,7 +1,6 @@
 <template>
   <f7-page>
     <login></login>
-    <wallets></wallets>
   </f7-page>
 </template>
 

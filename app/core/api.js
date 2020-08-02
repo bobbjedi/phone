@@ -1,29 +1,51 @@
-// import axios from 'axios';
-import Store from './Store';
+import config from '../../config';
+import axios from 'axios';
+import auth from './auth';
 
-export default (obj, cb = () => {}, silent, type = 'api') => {
-    // obj.data = obj.data || {};
-    // obj.data.token = type === 'api' && (obj.token || Store.user.token);
-    // // console.log('Req: ', obj.action, obj.data);
-    // axios.get('/' + type + '?action=' + obj.action + '&data=' + JSON.stringify(obj.data))
-    //     .then(function (res) {
-    //         const data = res.data;
-    //         // console.log('Resp:', obj.action + ' -> ', data.result);
-    //         if (data.success) {
-    //             cb(data.result);
-    //             return;
-    //         }
-    //         console.warn(obj.action + ' error: ', data);
-    //         if (!silent) {
-    //             Store.$notify({
-    //                 type: 'error',
-    //                 group: 'foo',
-    //                 title: 'Error ' + obj.action,
-    //                 text: data.msg
-    //             });
-    //         }
-    //     })
-    //     .catch(function (err) {
-    //         console.warn(obj.data.action, err);
-    //     });
+const instance = axios.create({
+    baseURL: config.domain + '/api/v1/',
+    timeout: 5000
+});
+
+/**
+* @param {String} action
+* @param {Object} data
+* @param {Function} cb
+*/
+export default async (action, data, cb) => {
+    let {method, url, isJWT} = middlewares[action];
+    let headers;
+    if (method === 'get' && action !== 'current'){
+        url += objToGet(data);
+        data = false;
+    }
+    if (action === 'current') {
+        url = data.url;
+    }
+    if (isJWT) {
+        await auth.refreshTokensIfNeeded(); // TODO: чек протухшего токена
+        headers = { Authorization: 'Token ' + auth.tokens.access };
+    }
+    console.log(url);
+    instance({ url, method, data, headers}).then(res => {
+        // console.log(action, res.status, res);
+        res.success = true;
+        cb(res);
+    }).catch(e => {
+        console.log('Api error', action, '<', e);
+        cb({success: false});
+    });
 };
+
+const middlewares = {
+    registration: {url: 'user/registration/', method: 'post'},
+    login: { url: 'user/login/', method: 'post'},
+    createOrder: {url: 'order/create', method: 'post', isJWT: true},
+    ordersHistory: {url: 'user/orders', method: 'get', isJWT: true},
+    // Public
+    curencyes: {url: 'cashe/currencies', method: 'get'},
+    tikers: {url: 'exchange.xml', method: 'get'},
+    current: { method: 'get' }
+};
+
+const objToGet = obj => Object.keys(obj).reduce((s, k) => s + k + '=' + obj[k] + '&', '?');

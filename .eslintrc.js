@@ -27,8 +27,11 @@ module.exports = {
         "no-mixed-spaces-and-tabs": "error", // нельзя миксовать табы и пробелы
         "keyword-spacing": ["error", { "after": true }],
         "comma-spacing": ["error", { "before": false, "after": true }], // отступ после запятой, а перед нельзя
-        "no-undef":"error",
-        "array-callback-return": "error" // коллбек методов массива типа arr.map arr.filter должны иметь return в коллбеке
+        "no-undef": "error",
+        "array-callback-return": "error", // коллбек методов массива типа arr.map arr.filter должны иметь return в коллбеке
+        "prefer-const": ["error", {
+            "destructuring": "all"
+        }],
     },
     "env": {
         "browser": true,
