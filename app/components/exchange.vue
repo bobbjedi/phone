@@ -2,7 +2,7 @@
 <f7-page :page-content="false">
     <div class="page-block-with-menu bg-blue">
         <!-- MAIN-BLOCK -->
-        <div class="main-block">
+        <div class="main-block" id="scrollable-block-exchange">
 
             <!-- HEADER PAGE -->
             <div class="header-block txt-white center">
@@ -48,6 +48,25 @@
                     <f7-swiper-slide>Slide 6</f7-swiper-slide>
                 </f7-swiper>
                 <div class="ml15 mt10 big mb5 bold">История обменов</div>
+
+                <!-- HISTORY -->
+                <div class="orders-history-list">
+                    <div class="order-history-item txt-lightgrey" v-for="o in ordersHistory" :key="o.id">
+                        <div class="j-between big"><span>№{{o.id}}</span> <span>{{o.date_make_order * 1000 | d_m_y}}</span></div>
+                        <div class="center big mt10 mb10 txt-grey">{{o.status | status}}</div>
+                        <div class="j-around big">
+                            <span class="column-center">
+                                <img :src="'./assets/svgicon/' + o.money1.toLowerCase() + '.svg'" width="25" />
+                                <span>{{o.amount_money1 | format}}</span>
+                            </span>
+                            <i class="txt-grey fa fa-exchange bigbig" aria-hidden="true"></i>
+                            <span class="column-center">
+                                <img :src="'./assets/svgicon/' + o.money2.toLowerCase() + '.svg'" width="25" />
+                                <span>{{o.amount_money2 | format}}</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -69,8 +88,7 @@
                         <div class="tab-item" :class="{active: filteredGroup === 'COIN'}" @click="filteredGroup = 'COIN'">Крипто</div>
                         <div class="tab-item" :class="{active: filteredGroup === 'FIAT'}" @click="filteredGroup = 'FIAT'">Фиат</div>
                     </div>
-                    <!-- v-show= "(searchKey.length && c.code.toLowerCase().includes(searchKey.toLowerCase()) || !searchKey.length) && (filteredGroup === 'ALL' || filteredGroup === c.currency_type)"
-                            @click="choiceCoin(c.code)" -->
+
                     <div class="curencyes-list overflow-auto mt15">
                         <div class="curency-item mt10" v-show="(searchKey.length && c.code.toLowerCase().includes(searchKey.toLowerCase()) || !searchKey.length) && (filteredGroup === 'ALL' || filteredGroup === c.currency_type)" v-for="c in optionsSelect" :key="c.code" @click="choiceCoin(c.code)">
                             <div class="curency-name-block">
@@ -111,14 +129,24 @@ export default {
             searchKey: '',
             isChangedCoin: false,
             changedCoinType: '',
-            filteredGroup: 'ALL',
+            filteredGroup: 'ALL'
         };
     },
     mounted() {
         this.getFromCoinTikers();
+        const el = document.getElementById('scrollable-block-exchange');
+        el.addEventListener('scroll', () => {
+            if (el.scrollHeight - el.scrollTop === el.clientHeight) {
+               Store.updateOrdersHistory(true);
+            }
+        });
     },
     computed: {
         user: () => Store.user,
+        ordersHistory: () => Store.ordersHistory,
+        curency() {
+            return Store.curencyes.find(c => c.code === this.fromCoin)
+        },
         // curencyes: () => Store.curencyes,
         optionsSelect() {
             if (this.changedCoinType === 'from') {
@@ -136,8 +164,16 @@ export default {
             });
         },
         isValidAmount() {
-            const {toCoinAmount, fromCoinAmount} = this;
-            const {min_money1, min_money2, max_money1, max_money2} = this.tiker;
+            const {
+                toCoinAmount,
+                fromCoinAmount
+            } = this;
+            const {
+                min_money1,
+                min_money2,
+                max_money1,
+                max_money2
+            } = this.tiker;
             // console.log(toCoinAmount >= min_money2, toCoinAmount <= max_money2, fromCoinAmount >= min_money1, fromCoinAmount <= max_money1);
             return toCoinAmount >= min_money2 && toCoinAmount <= max_money2
             // && fromCoinAmount >= min_money1 && fromCoinAmount <= max_money1
@@ -155,12 +191,14 @@ export default {
         },
         getFromCoinTikers() {
             this.$f7.preloader.show();
+
+            console.log('this.curency', Store.curencyes, this.curency);
             api('current', {
                 url: 'cashe/operations/' + this.fromCoin
             }, res => {
                 if (res.success) {
                     this.fromCoinTikers = res.data;
-                    console.log('fromCoinTikers', this.fromCoinTikers)
+                    console.log('fromCoinTikers', this.fromCoinTikers);
                     if (!res.data.some(c => c.buy_curency.code === this.toCoin)) {
                         this.toCoin = res.data[0].buy_curency.code;
                     } else {
@@ -182,6 +220,10 @@ export default {
                 }
             });
         },
+        // roundAmounts(){
+        //     this.fromCoinAmount = $u.round(this.fromCoinAmount, this.curency.exponent);
+        //     this.toCoinAmount = $u.round(this.toCoinAmount, this.tiker.buy_curency.exponent);
+        // },
         startExchange() {
             Store.exchangeData = {
                 fromCoin: this.fromCoin,
@@ -203,7 +245,7 @@ export default {
         toCoinAmount() {
             if (this.isBlock !== 'to') {
                 const tiker = this.tiker.turn_the_course ? 1 / this.tiker.exchange_rate : this.tiker.exchange_rate;
-                this.fromCoinAmount = $u.round(this.toCoinAmount / tiker);
+                this.fromCoinAmount = $u.round(this.toCoinAmount / tiker, this.curency.exponent);
                 this.isBlock = 'from';
                 this.$nextTick(() => this.isBlock = false);
             }
@@ -312,5 +354,20 @@ input {
 .curency-name-block {
     display: flex;
     align-items: center;
+}
+
+/* История */
+.order-history-list {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.order-history-item {
+    min-width: 250px;
+    max-width: 300px;
+    margin: 10px auto;
+    border-radius: 10px;
+    background: #e2e2e4;
+    padding: 15px;
 }
 </style>

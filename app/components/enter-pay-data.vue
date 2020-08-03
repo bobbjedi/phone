@@ -55,6 +55,7 @@
 import Store from "../core/Store";
 import $u from '../core/utils';
 import api from '../core/api';
+import listenerOrders from '../core/listenerOrders';
 import {ordersDb} from '../core/localDb';
 import bottomMenu from './bottom-menu.vue';
 
@@ -67,7 +68,7 @@ export default {
             isAgree: true,
             fromAddress: '78745465465',
             toAddress: '17pCKgo5dCrdd31i1rn2v37Euunxuvve2W',
-            email: 'dfghf@jlkj.com',
+            email: 'twswtest@gmail.com',
             //  isAgree: false,
             // fromAddress: '',
             // toAddress: '',
@@ -137,12 +138,13 @@ export default {
                 if(res.success){
                     const order = res.data;
                     order._id = order.id;
-                    new ordersDb(order, 1);
-                    console.log(res);
+                    const orderDoc = new ordersDb(order, 1);
                     Store.exchangeData.order = order;
                     this.$f7router.navigate('/make-payment');
+                    listenerOrders.addListenner(orderDoc);
                 } else {
-                    alert('ОШИБКА СОЗДАНИЯ ОРДЕРА');
+                    Store.noty('Ошибка!', 'При создании ордера произошла ошибка.');
+                    // alert('ОШИБКА СОЗДАНИЯ ОРДЕРА');
                 }
             });
         }

@@ -11,6 +11,11 @@ export default {
         // return time.getDate() + '/' + (time.getMonth() + 1) + ' ' + time.getHours() + ':' + time.getHours() + time.getSeconds();
         return addZero(time.getHours()) + ':' + addZero(time.getHours()) + ':' + addZero(time.getSeconds());
     },
+    unixToStringDMY(u) {
+        const time = new Date(u);
+        // return time.getDate() + '/' + (time.getMonth() + 1) + ' ' + time.getHours() + ':' + time.getHours() + time.getSeconds();
+        return addZero(time.getDate) + '/' + addZero(time.getMonth()) + '/' + time.getFullYear();
+    },
     unixToStringHM(u) {
         const time = new Date(u);
         return addZero(time.getHours()) + ':' + addZero(time.getMinutes());

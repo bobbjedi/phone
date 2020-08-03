@@ -11,6 +11,8 @@ Vue.filter('capitalize', function (value) {
 
 Vue.filter('unix', v => $u.unixToString(v));
 Vue.filter('msgtime', v => $u.unixToStringHM(v));
+Vue.filter('d_m_y', v => $u.unixToStringDMY(v));
+Vue.filter('status', v => $u.parseStatus(v));
 Vue.filter('round', v => {
     if (!v) {
         return 0;

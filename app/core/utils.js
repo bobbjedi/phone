@@ -30,59 +30,77 @@ export default {
         });
         return normalJson;
     },
+    unixToStringDMY(u) {
+        const time = new Date(u);
+        // return time.getDate() + '/' + (time.getMonth() + 1) + ' ' + time.getHours() + ':' + time.getHours() + time.getSeconds();
+        return addZero(time.getDate()) + '/' + addZero(time.getMonth() + 1) + '/' + time.getFullYear();
+    },
     clone(obj){
         return JSON.parse(JSON.stringify(obj));
+    },
+    // Определяем по статусу что ордер закрыт
+    ordersIsNeedClose(order){
+        return [8, 9, 16, 17, 18, 23].includes(order.status);
     },
     parseStatus(status){
         switch (status) {
         case 0:
             return 'Формирование заказа';
         case 1:
-            return 'поиск номера для приема оплаты';
+            return 'Поиск номера для приема оплаты';
         case 2:
-            return 'не удалось найти номер';
+            return 'Не удалось найти номер';
         case 3:
-            return 'ожидание прихода оплаты';
+            return 'Ожидание прихода оплаты';
         case 4:
-            return 'оплата клиентом просрочена';
+            return 'Оплата клиентом просрочена';
         case 5:
-            return 'оплачено во время (оплата пришла)';
+            return 'Оплачено во время (оплата пришла)';
         case 6:
-            return 'не удалось выплатить клиенту ';
+            return 'Не удалось выплатить клиенту ';
         case 7:
-            return 'выплачено успешно';
+            return 'Выплачено успешно';
         case 8:
-            return 'отменен клиентом ';
+            return 'Отменен клиентом ';
         case 9:
-            return 'отмен операторм';
+            return 'Отменен операторм';
         case 10:
-            return 'ожидание от клиента реквизитов для проверки';
+            return 'Ожидание от клиента реквизитов для проверки';
         case 11:
-            return 'ожидание проверки и подтверждения реквизитов операторм';
+            return 'Ожидание проверки и подтверждения реквизитов операторм';
         case 12:
-            return 'клиент нажал оплатил или отправил код';
+            return 'Клиент нажал оплатил или отправил код';
         case 13:
-            return 'не достаточно средств переведено клиентом';
+            return 'Не достаточно средств переведено клиентом';
         case 14:
-            return 'платеж клиента не прошел';
+            return 'Платеж клиента не прошел';
         case 15:
             return 'СТАРТ транзакции, 0 подтверждений';
         case 16:
-            return 'реквизиты заблокированы';
+            return 'Реквизиты заблокированы';
         case 17:
-            return 'email заблокирован';
+            return 'Email заблокирован';
         case 18:
-            return 'не верная операция';
+            return 'Не верная операция';
         case 19:
-            return 'реквизиты отклонены';
+            return 'Реквизиты отклонены';
         case 21:
-            return 'расчет прибыли от заказа';
+            return 'Расчет прибыли от заказа';
         case 22:
-            return 'расчет рефералки';
+            return 'Расчет рефералки';
         case 23:
-            return 'заказ завершен';
+            return 'Заказ завершен';
         default:
             return 'Неопределен';
         }
     }
 };
+
+
+
+function addZero(num) {
+    if (num < 10) {
+        return '0' + num;
+    }
+    return num;
+}

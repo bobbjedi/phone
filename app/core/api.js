@@ -2,10 +2,10 @@ import config from '../../config';
 import axios from 'axios';
 import auth from './auth';
 
-const instance = axios.create({
-    baseURL: config.domain + '/api/v1/',
-    timeout: 5000
-});
+// const instance = axios.create({
+//     baseURL: config.domain + '/api/v1/',
+//     timeout: 5000
+// });
 
 /**
 * @param {String} action
@@ -26,8 +26,9 @@ export default async (action, data, cb) => {
         await auth.refreshTokensIfNeeded(); // TODO: чек протухшего токена
         headers = { Authorization: 'Token ' + auth.tokens.access };
     }
-    console.log(url);
-    instance({ url, method, data, headers}).then(res => {
+    url = config.domain + '/api/v1/' + url;
+    // console.log('>>', url);
+    axios({ url, method, data, headers}).then(res => {
         // console.log(action, res.status, res);
         res.success = true;
         cb(res);

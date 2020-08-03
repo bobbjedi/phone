@@ -84,15 +84,7 @@ export default {
                     savedTokens.jwtInfo = this.password; // очень плохо ((
                     auth.setTokens(savedTokens); // для реги tokens, для логина {access, refresh}
                     app.loginScreen.close();
-
-                    app.notification.create({
-                        icon: '<i class="txt-green fa fa-btc" aria-hidden="true"></i>',
-                        title: "Alfa Bit",
-                        subtitle: "Успешный вход!",
-                        text: "Здравcтсвуйте, " + username + "!",
-                        closeButton: true,
-                        closeTimeout: 2000
-                    }).open();
+                    Store.noty("Успешный вход!", "Здравcтсвуйте, " + username + "!");
                     this.$f7.preloader.hide();
                 } else {
                     alert('ERROR ' + res.status);

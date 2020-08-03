@@ -1,17 +1,14 @@
 import Vue from 'vue';
 import api from './api';
-import config from '../../config';
 import _ from 'underscore';
-import {ordersDb} from './localDb';
-import io from 'socket.io-client';
+import listenerOrders from './listenerOrders';
 
 export default new Vue({
     async created() {
         Vue.prototype.navigate = v => this.$f7router.navigate(v);
         this.getCurencyesData();
-        setTimeout(()=>api('ordersHistory', {page: 1}, console.log), 1000);
-        // console.log('ordersDb', await ordersDb.find({}));
-        // (await ordersDb.find({})).forEach(o => this.addOrderListenner(o));
+        this.updateOrdersHistory();
+        listenerOrders.init();
     },
     data: {
         exchangeData: {
@@ -31,9 +28,20 @@ export default new Vue({
         },
         curencyes: [],
         tikers: [],
-        listenOrders: {}
+        ordersHistory: [],
+        lastPageHistoryLoad: 1
     },
     methods: {
+        noty(subtitle, text, delay = 3){
+            this.$f7.notification.create({
+                icon: '<i class="txt-green fa fa-btc" aria-hidden="true"></i>',
+                title: "Alfa Bit",
+                subtitle,
+                text,
+                closeButton: true,
+                closeTimeout: delay * 1000
+            }).open();
+        },
         logOut() {
             this.user.isLogged = false;
             this.tokens = false;
@@ -41,34 +49,26 @@ export default new Vue({
         getCurencyesData(){
             api('curencyes', {}, res => {
                 if (res.success) {
-                    console.log(res.data);
                     this.curencyes = res.data;
                 }
             });
         },
-        addOrderListenner(order) {
-            const { uid } = order;
-            getOrderData(uid, res => {
-                const {data} = res;
-                order.update(data, 1);
-                const socket = io(config.domain + '/order/status/');
-                socket.send(JSON.stringify({ id: order.uid }));
-                socket.on('status/' + order.uid, msg => getOrderData(uid, data => order.update(data, 1))); // обновляем
-                console.log('set listenner', order.uid);
-                this.listenOrders[order.id] = {
-                    id: order.id,
-                    socket
-                };
+        updateOrdersHistory(nextPage = false){
+            let page = 1;
+            if (nextPage){
+                page = ++this.lastPageHistoryLoad;
+            } else {
+                this.lastPageHistoryLoad = 1;
+            }
+            console.log({page, lastPageHistoryLoad: this.lastPageHistoryLoad});
+            api('ordersHistory', { page }, res => {
+                if (res.success) {
+                    if (nextPage){
+                        return this.ordersHistory = this.ordersHistory.concat(res.data.results);
+                    }
+                    this.ordersHistory = res.data.results;
+                }
             });
         }
     }
 });
-
-
-const getOrderData = (uid, cb)=>{
-    api('current', {url: 'order/' + uid}, res => {
-        if (res.success){
-            cb(res.data);
-        }
-    });
-};

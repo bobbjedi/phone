@@ -9,7 +9,7 @@
                     <f7-icon icon="icon-back"></f7-icon>
                 </span>
                 <span class="big">Перевод средств</span>
-                <span class="big"><i class="fa fa-cog bigbig" aria-hidden="true"></i></span>
+                <span class="big mr5"><i class="fa fa-cog bigbig" aria-hidden="true"></i></span>
             </div>
 
             <!-- DARK_PATH -->
