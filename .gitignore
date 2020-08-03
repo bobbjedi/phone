@@ -15,3 +15,5 @@ server/cordova/package.json
 server/cordova/node_modules
 public/build.js
 public/public.zip
+platforms/
+plugins/

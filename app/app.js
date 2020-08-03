@@ -16,3 +16,7 @@ new Vue({
     el: '#app',
     render: (h) => h(App),
 });
+setTimeout(()=>{
+    window.onerror = e => console.log('Error', e);
+}, 1000);
+

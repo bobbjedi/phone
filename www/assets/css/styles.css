@@ -1,0 +1,53 @@
+/* --f7-theme-color */
+:root {
+    --f7-theme-color: #4d4d6d !important;
+    /* --f7-theme-color-shade: #d60000;
+    --f7-theme-color-tint: #ff2929;
+    --f7-theme-color-rgb: 255, 0, 0; */
+  }
+
+.navbar-bg {
+    /* background-color: #3b3b56 !important; */
+    color: white;
+}
+.navbar .icon,
+.navbar .title
+{
+    color: white !important;
+}
+
+.button-wrapper{
+    margin: 5px;
+    padding: 0 8%;
+  }
+
+/* Верстка страницы */
+
+.header-block {
+    display: flex;
+    justify-content: space-between;
+    margin: 5px auto;
+    width: 96%;
+    margin: 10px 3%;
+    align-items: center;
+}
+.page-block-with-menu {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+.main-block {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    height: calc( 100vh - 51px);
+}
+.page-content-block {
+    flex: 1 0 auto;
+    width: 100%;
+}
+.disable-button{
+    pointer-events: none;
+    opacity: .7;
+}
