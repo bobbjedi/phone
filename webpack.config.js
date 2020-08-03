@@ -1,9 +1,8 @@
 /* eslint-disable*/
 const path = require('path');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
-const Dist = path.resolve(__dirname, './public/');
+const Dist = path.resolve(__dirname, './www/');
 const isDev = process.argv[3] === 'development';
-let ls;
 
 module.exports = {
     entry: {

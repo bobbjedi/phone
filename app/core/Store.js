@@ -10,8 +10,8 @@ export default new Vue({
         Vue.prototype.navigate = v => this.$f7router.navigate(v);
         this.getCurencyesData();
         setTimeout(()=>api('ordersHistory', {page: 1}, console.log), 1000);
-        console.log('ordersDb', await ordersDb.find({}));
-        (await ordersDb.find({})).forEach(o => this.addOrderListenner(o));
+        // console.log('ordersDb', await ordersDb.find({}));
+        // (await ordersDb.find({})).forEach(o => this.addOrderListenner(o));
     },
     data: {
         exchangeData: {

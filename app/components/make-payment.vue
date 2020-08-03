@@ -14,7 +14,7 @@
 
             <!-- DARK_PATH -->
             <div class="txt-white center mb5 mt5">
-                <div class="txt-lightgrey id-time-block"><span>Заявка №: 23687</span>     <span>Время: 07:04</span></div>
+                <div class="txt-lightgrey id-time-block"><span>Заявка №: 23687</span><span>Время: 07:04</span></div>
              </div>
 
             <!-- WHITE-PATH -->

@@ -5,7 +5,7 @@ import Framework7 from 'framework7/framework7.esm.bundle.js';
 import Framework7Vue from 'framework7-vue/framework7-vue.esm.bundle.js';
 import 'framework7/css/framework7.bundle.css';
 import 'framework7-icons';
-import '../public/assets/font-awesome/css/font-awesome.min.css';
+import '../www/assets/font-awesome/css/font-awesome.min.css';
 import './core/filters';
 
 Framework7.use(Framework7Vue);
@@ -16,7 +16,5 @@ new Vue({
     el: '#app',
     render: (h) => h(App),
 });
-setTimeout(()=>{
-    window.onerror = e => console.log('Error', e);
-}, 1000);
 
+window.addEventListener('error', e => console.log('onError', e));
