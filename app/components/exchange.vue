@@ -141,7 +141,7 @@ export default {
         Store.exchangeData = {};
         // setTimeout(()=>this.$f7router.navigate('/make-payment/8c89de41-9005-424e-85b2-6e7f87fdb767/'), 500);
         this.getFromCoinTikers();
-        setInterval(()=> this.getTiker(), 10000);
+        this.tikerTimer = setInterval(()=> this.getTiker(), 10000);
         const el = document.getElementById('scrollable-block-exchange');
         el.addEventListener('scroll', () => {
             if (el.scrollHeight - el.scrollTop - el.clientHeight < 2) {
@@ -277,6 +277,10 @@ export default {
                 this.$nextTick(() => this.isBlock = false);
             }
         }
+    },
+    destroyed(){
+        console.log('DESTROYED')
+        clearInterval(this.tikerTimer);
     }
 };
 </script>
@@ -388,10 +392,6 @@ input {
     border-radius: 10px;
     background: #e2e2e4;
     padding: 15px;
-}
-
-.touch-line{
-
 }
 
 .touch-close-line {
