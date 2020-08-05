@@ -9,6 +9,7 @@ export default new Vue({
         this.getCurencyesData();
         this.updateOrdersHistory();
         listenerOrders.init();
+        window.Store = this;
     },
     data: {
         exchangeData: {
@@ -29,17 +30,26 @@ export default new Vue({
         curencyes: [],
         tikers: [],
         ordersHistory: [],
-        lastPageHistoryLoad: 1
+        nextPageHistoryLoad: 2,
+        isNexPageLoaded: false
     },
     methods: {
         noty(subtitle, text, delay = 3){
             this.$f7.notification.create({
-                icon: '<i class="txt-green fa fa-btc" aria-hidden="true"></i>',
+                icon: '<i class="txt-blue fa fa-btc" aria-hidden="true"></i>',
                 title: "Alfa Bit",
                 subtitle,
                 text,
                 closeButton: true,
                 closeTimeout: delay * 1000
+            }).open();
+        },
+        toast(text, position = 'top'){
+            this.$f7.toast.create({
+                text,
+                position,
+                cssClass: 'center',
+                closeTimeout: 2000
             }).open();
         },
         logOut() {
@@ -54,16 +64,22 @@ export default new Vue({
             });
         },
         updateOrdersHistory(nextPage = false){
+            if (this.isNexPageLoaded) {
+                return;
+            }
+            this.isNexPageLoaded = true;
             let page = 1;
             if (nextPage){
-                page = ++this.lastPageHistoryLoad;
+                page = this.nextPageHistoryLoad;
             } else {
-                this.lastPageHistoryLoad = 1;
+                this.nextPageHistoryLoad = 2;
             }
-            console.log({page, lastPageHistoryLoad: this.lastPageHistoryLoad});
+            console.log({page, nextPageHistoryLoad: this.nextPageHistoryLoad});
             api('ordersHistory', { page }, res => {
+                this.$nextTick(()=> this.isNexPageLoaded = false);
                 if (res.success) {
                     if (nextPage){
+                        this.nextPageHistoryLoad++;
                         return this.ordersHistory = this.ordersHistory.concat(res.data.results);
                     }
                     this.ordersHistory = res.data.results;

@@ -15,14 +15,14 @@
             <div class="coin-exchange-block txt-white">
                 <div class="coin-path" @click="changeCoin('from')">
                     <div class="small">Отдаете</div>
-                    <div class="currency-name mt5"> <img :src="'./assets/svgicon/' + fromCoin.toLowerCase() + '.svg'" width="25" /> <span class="ml5">{{fromCoin}}</span><i class="ml5 fa fa-caret-down" aria-hidden="true"></i></div>
+                    <div class="currency-name mt5"> <coin-icon :code="fromCoin" width="25" /><span class="ml5">{{fromCoin}}</span><i class="ml5 fa fa-caret-down" aria-hidden="true"></i></div>
                 </div>
                 <input class="big" type="number" v-model.number="fromCoinAmount" :min="tiker.min_money1" :max="tiker.max_money1">
             </div>
             <div class="coin-exchange-block txt-white">
                 <div class="coin-path" @click="changeCoin('to')">
                     <div class="small">Получаете</div>
-                    <div class="currency-name mt5"> <img :src="'./assets/svgicon/' + toCoin.toLowerCase() + '.svg'" width="25" /> <span class="ml5">{{toCoin}}</span><i class="ml5 fa fa-caret-down" aria-hidden="true"></i></div>
+                    <div class="currency-name mt5"> <coin-icon :code="toCoin" width="25" /><span class="ml5">{{toCoin}}</span><i class="ml5 fa fa-caret-down" aria-hidden="true"></i></div>
                 </div>
                 <input class="big" type="number" v-model.number="toCoinAmount" :min="tiker.min_money2" :max="tiker.max_money2">
             </div>
@@ -50,23 +50,26 @@
                 <div class="ml15 mt10 big mb5 bold">История обменов</div>
 
                 <!-- HISTORY -->
-                <div class="orders-history-list">
-                    <div class="order-history-item txt-lightgrey" v-for="o in ordersHistory" :key="o.id">
+                <div class="orders-history-list" v-if="ordersHistory.length">
+                    <div class="order-history-item txt-lightgrey" v-for="o in ordersHistory" :key="o.id"
+                    @click="$f7router.navigate('/make-payment/' + (o.uid || o.unique_id))">
                         <div class="j-between big"><span>№{{o.id}}</span> <span>{{o.date_make_order * 1000 | d_m_y}}</span></div>
                         <div class="center big mt10 mb10 txt-grey">{{o.status | status}}</div>
                         <div class="j-around big">
                             <span class="column-center">
-                                <img :src="'./assets/svgicon/' + o.money1.toLowerCase() + '.svg'" width="25" />
+                                <coin-icon :code="o.money1" width="25" />
                                 <span>{{o.amount_money1 | format}}</span>
                             </span>
                             <i class="txt-grey fa fa-exchange bigbig" aria-hidden="true"></i>
                             <span class="column-center">
-                                <img :src="'./assets/svgicon/' + o.money2.toLowerCase() + '.svg'" width="25" />
+                                <coin-icon :code="o.money2" width="25" />
                                 <span>{{o.amount_money2 | format}}</span>
                             </span>
                         </div>
                     </div>
                 </div>
+                <div v-if="!ordersHistory.length" class="big center txt-grey">Обменов нет</div>
+                <div class="center mb5" :style="{opacity: (isNexPageLoaded ? 1: 0)}"><f7-preloader color="#3b3b56" ></f7-preloader></div>
             </div>
         </div>
 
@@ -92,7 +95,7 @@
                     <div class="curencyes-list overflow-auto mt15">
                         <div class="curency-item mt10" v-show="(searchKey.length && c.code.toLowerCase().includes(searchKey.toLowerCase()) || !searchKey.length) && (filteredGroup === 'ALL' || filteredGroup === c.currency_type)" v-for="c in optionsSelect" :key="c.code" @click="choiceCoin(c.code)">
                             <div class="curency-name-block">
-                                <img :src="'./assets/svgicon/btc.svg'" width="20" />
+                                <coin-icon :code="c.code" width="20" />
                                 <span class="big ml5">{{c.code}}</span>
                             </div>
                             <div class="txt-grey">{{c.reserv_data.data.value | format}}</div>
@@ -133,10 +136,17 @@ export default {
         };
     },
     mounted() {
+        // setTimeout(()=>this.$f7router.navigate('/make-payment/8c89de41-9005-424e-85b2-6e7f87fdb767/'), 500);
         this.getFromCoinTikers();
+        setInterval(()=> this.getTiker(), 10000);
         const el = document.getElementById('scrollable-block-exchange');
         el.addEventListener('scroll', () => {
-            if (el.scrollHeight - el.scrollTop === el.clientHeight) {
+            if (el.scrollHeight - el.scrollTop - el.clientHeight < 2) {
+               Store.updateOrdersHistory(true);
+            }
+        });
+         el.addEventListener('touchmove', () => {
+            if (el.scrollHeight - el.scrollTop - el.clientHeight < 2) {
                Store.updateOrdersHistory(true);
             }
         });
@@ -144,6 +154,10 @@ export default {
     computed: {
         user: () => Store.user,
         ordersHistory: () => Store.ordersHistory,
+        isNexPageLoaded: () => Store.isNexPageLoaded,
+        rate(){
+            return this.tiker.turn_the_course ? 1 / this.tiker.exchange_rate : this.tiker.exchange_rate;
+        },
         curency() {
             return Store.curencyes.find(c => c.code === this.fromCoin)
         },
@@ -190,7 +204,7 @@ export default {
             this.isChangedCoin = false;
         },
         getFromCoinTikers() {
-            this.$f7.preloader.show();
+            this.$f7.dialog.preloader('Загрузка...');
 
             console.log('this.curency', Store.curencyes, this.curency);
             api('current', {
@@ -198,7 +212,6 @@ export default {
             }, res => {
                 if (res.success) {
                     this.fromCoinTikers = res.data;
-                    console.log('fromCoinTikers', this.fromCoinTikers);
                     if (!res.data.some(c => c.buy_curency.code === this.toCoin)) {
                         this.toCoin = res.data[0].buy_curency.code;
                     } else {
@@ -211,12 +224,16 @@ export default {
             api('current', {
                 url: 'cashe/operations/detail/' + this.fromCoin + '/' + this.toCoin
             }, res => {
-                this.$f7.preloader.hide();
+                 this.$f7.dialog.close();
                 if (res.success) {
                     const t = res.data;
                     t.max_money2 = Math.min(t.buy_curency.reserv_data.data.value, t.max_money2);
                     this.tiker = t;
                     this.toCoinAmount = t.min_money2 * 1.1;
+                    Store.exchangeData.tiker = t;
+                    this.$nextTick(()=>Store.exchangeData.rate = this.rate);
+                } else {
+                    Store.toast('Неустойчивое интернет соединение!');
                 }
             });
         },
@@ -230,7 +247,7 @@ export default {
                 toCoin: this.toCoin,
                 fromCoinAmount: $u.round(this.fromCoinAmount),
                 toCoinAmount: this.toCoinAmount,
-                tiker: $u.clone(this.tiker)
+                tiker: $u.clone(this.tiker),
             };
             this.$f7router.navigate('/enter-pay-data');
         }
@@ -244,16 +261,14 @@ export default {
         },
         toCoinAmount() {
             if (this.isBlock !== 'to') {
-                const tiker = this.tiker.turn_the_course ? 1 / this.tiker.exchange_rate : this.tiker.exchange_rate;
-                this.fromCoinAmount = $u.round(this.toCoinAmount / tiker, this.curency.exponent);
+                this.fromCoinAmount = $u.round(this.toCoinAmount / this.rate, this.curency.exponent);
                 this.isBlock = 'from';
                 this.$nextTick(() => this.isBlock = false);
             }
         },
         fromCoinAmount() {
             if (this.isBlock !== 'from') {
-                const tiker = this.tiker.turn_the_course ? 1 / this.tiker.exchange_rate : this.tiker.exchange_rate;
-                this.toCoinAmount = $u.round(this.fromCoinAmount * tiker, this.tiker.buy_curency.exponent);
+                this.toCoinAmount = $u.round(this.fromCoinAmount * this.rate, this.tiker.buy_curency.exponent);
                 this.isBlock = 'to';
                 this.$nextTick(() => this.isBlock = false);
             }

@@ -30,7 +30,7 @@
                         @input="fromAddress = $event.target.value"
                         ></f7-list-input>
                     <f7-list-input class="small" :value="toAddress" @input="toAddress = $event.target.value" :label="buyCurency.label_buy + ' ' + buyCurency.bestchange_code" type="text" :placeholder="buyCurency.exemple" validate :pattern="buyCurency.re" clear-button></f7-list-input>
-                    <f7-list-input class="small" :value="email" @input="email = $event.target.value" placeholder="example@gmail.com" label="Ваш email" type="text" validate clear-button pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"></f7-list-input>
+                    <f7-list-input class="small" readonly :value="email" @input="email = $event.target.value" placeholder="example@gmail.com" label="Ваш email" type="text" validate pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"></f7-list-input>
                 </f7-list>
                 <div class="center mt15 agree-exchange" @click="isAgree = !isAgree">
                     <f7-checkbox :checked="isAgree" class="md"></f7-checkbox> <span class="ml5">Я согласен с правилами обмена</span>
@@ -65,26 +65,23 @@ export default {
     },
     data() {
         return {
-            isAgree: true,
-            fromAddress: '78745465465',
-            toAddress: '17pCKgo5dCrdd31i1rn2v37Euunxuvve2W',
-            email: 'twswtest@gmail.com',
-            //  isAgree: false,
-            // fromAddress: '',
-            // toAddress: '',
-            // email: Store.user.email || '',
-            tiker: {}
+            // isAgree: true,
+            // fromAddress: '78745465465',
+            // toAddress: '17pCKgo5dCrdd31i1rn2v37Euunxuvve2W',
+            // email: 'twswtest@gmail.com',
+            isAgree: false,
+            fromAddress: '',
+            toAddress: '',
+            email: Store.user.email || '',
         };
     },
     created(){
         Store.$watch('user.email', v => this.email = v);
     },
     mounted() {
-        this.tiker = Store.exchangeData.tiker;
-        // console.log(Store.exchangeData.tiker);
-        setTimeout(() => this.getTiker(), 2000);
     },
     computed: {
+        tiker: ()=> Store.exchangeData.tiker,
         isNeedSellAddress(){
             return this.sellCurency.isAskReqSell;
         },
@@ -104,25 +101,14 @@ export default {
         }
     },
     methods: {
-        getTiker() {
-            api('current', {
-                url: 'cashe/operations/detail/' + this.exchangeData.fromCoin + '/' + this.exchangeData.toCoin
-            }, res => {
-                this.$f7.preloader.hide();
-                if (res.success) {
-                    this.tiker = res.data;
-                    Store.exchangeData.tiker = res.data;
-                    console.log('tiker', res.data);
-                }
-            });
-        },
         makePay(){
             Store.exchangeData.toAddress = this.toAddress;
             Store.exchangeData.fromAddress = this.fromAddress;
             Store.exchangeData.email = this.email;
             const {email, fromAddress, toAddress, fromCoin, toCoin, fromCoinAmount, toCoinAmount} = Store.exchangeData;
 
-            this.$f7.preloader.show();
+            this.$f7.dialog.preloader('Создаем заявку...');
+
             api('createOrder', {
                 email,
                 money1: fromCoin,
@@ -132,20 +118,22 @@ export default {
                 amount_money1: fromCoinAmount,
                 amount_money2: toCoinAmount,
                 rid: "none",
-                rate: -1
-            }, res=>{
-                this.$f7.preloader.hide();
-                if(res.success){
-                    const order = res.data;
-                    order._id = order.id;
-                    const orderDoc = new ordersDb(order, 1);
-                    Store.exchangeData.order = order;
-                    this.$f7router.navigate('/make-payment');
-                    listenerOrders.addListenner(orderDoc);
-                } else {
-                    Store.noty('Ошибка!', 'При создании ордера произошла ошибка.');
-                    // alert('ОШИБКА СОЗДАНИЯ ОРДЕРА');
-                }
+                rate: Store.exchangeData.tiker.exchange_rate
+            }, res => {
+                setTimeout(()=>{
+                    this.$f7.dialog.close();
+                    if(res.success){
+                        const order = res.data;
+                        order._id = order.id;
+                        Store.exchangeData.order = order;
+                        this.$f7router.navigate('/make-payment/' + order.uid);
+                        const orderDoc = new ordersDb(order, 1);
+                        listenerOrders.addListenner(orderDoc);
+                        Store.updateOrdersHistory();
+                    } else {
+                        Store.noty('Ошибка!', 'При создании заявки произошла ошибка.');
+                    }
+                }, 500);
             });
         }
     }

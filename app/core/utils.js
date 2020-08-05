@@ -30,17 +30,24 @@ export default {
         });
         return normalJson;
     },
+    unixToStringHM(u) {
+        const time = new Date(u);
+        return addZero(time.getHours()) + ':' + addZero(time.getMinutes() + 1);
+    },
     unixToStringDMY(u) {
         const time = new Date(u);
-        // return time.getDate() + '/' + (time.getMonth() + 1) + ' ' + time.getHours() + ':' + time.getHours() + time.getSeconds();
         return addZero(time.getDate()) + '/' + addZero(time.getMonth() + 1) + '/' + time.getFullYear();
     },
     clone(obj){
         return JSON.parse(JSON.stringify(obj));
     },
+    unix(){
+        return new Date().getTime();
+    },
     // Определяем по статусу что ордер закрыт
     ordersIsNeedClose(order){
-        return [8, 9, 16, 17, 18, 23].includes(order.status);
+        const u = this.unix();
+        return u / 1000 - order.date_make_order > 7200 && status === 1 || [4, 8, 9, 16, 17, 18, 23].includes(order.status);
     },
     parseStatus(status){
         switch (status) {

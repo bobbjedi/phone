@@ -20,6 +20,10 @@
 import Vue from 'vue';
 import Store from './core/Store';
 import routes from './core/routes';
+
+import './components/global/coinIcon.vue';
+import './components/global/clone.vue';
+
 import login from './components/login.vue';
 
 export default {

@@ -13,7 +13,7 @@ const listenOrders = {};
 export default {
     async init(){
         try {
-            alert((await ordersDb.findOne({})));
+            console.log('findone', await ordersDb.findOne({}));
         } catch (error) {
             alert('Error DB');
         }
@@ -23,19 +23,24 @@ export default {
             .forEach(o => this.addListenner(o));
         this.getOrdersFromApi();
     },
-    addListenner(order){
+    async addListenner(order){
         const uid = order.uid || order.unique_id;
+        if ($u.ordersIsNeedClose(order)){
+            order.isClosed = true;
+            listenOrders[order.id] = true; // заглушка
+            await order.save();
+        }
         // console.log('addListenner', uid);
         const processedOrder = async data => {
+            Store.$emit('update_' + uid); // кричим подписчикам
             if (data.status !== order.status) {
-                Store.noty('Новый статус заказа №' + order.id, $u.parseStatus(order.status), 5);
-                if ($u.ordersIsNeedClose(order)){
-                    order.isClosed = true;
+                Store.noty('Новый статус заказа № ' + order.id, $u.parseStatus(data.status), 5);
+                const i = Store.ordersHistory.findIndex(o => o.id === order.id);
+                if (~i) {
+                    Store.ordersHistory[i] = data;
                 }
-                Store.updateOrdersHistory();
             }
-            console.log(order.id, $u.parseStatus(order.status));
-
+            // console.log(order.id, $u.parseStatus(order.status));
             await order.update(data, 1);
 
             if (order.isClosed || listenOrders[order.id]){
@@ -44,7 +49,7 @@ export default {
 
             socket.send(JSON.stringify({ id: uid }));
             socket.on('status/' + uid, () => getOrderData(uid, processedOrder)); // обновляем
-            console.log('set listenner', uid);
+            console.log('set listenner', order.id);
             listenOrders[order.id] = {id: order.id, socket};
         };
 
@@ -67,10 +72,11 @@ export default {
                 });
             }
         });
-    }
+    },
+    getOrderData
 };
 
-const getOrderData = (uid, cb)=>{
+function getOrderData(uid, cb) {
     api('current', {url: 'order/' + uid}, res => {
         if (res.success){
             cb(res.data);

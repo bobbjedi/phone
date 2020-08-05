@@ -10,7 +10,7 @@ export default [{
     component: enterPayData,
 },
 {
-    path: '/make-payment',
+    path: '/make-payment/:orderUid',
     component: makePayment,
 }
 ];
