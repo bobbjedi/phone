@@ -173,7 +173,7 @@ export default {
             return coins.map(c => {
                 return {
                     code: c.buy_curency.code,
-                    currency_type: c.currency_type,
+                    currency_type: c.buy_curency.currency_type,
                     reserv_data: {
                         data: c.rate_data
                     }
@@ -349,7 +349,7 @@ input {
     height: 100%;
     padding: 5px 0;
     color: #3b3b56;
-    border-radius: 15px;
+    border-radius: 14px;
     /* border: 1px solid transparent; */
 }
 
