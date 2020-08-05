@@ -1,5 +1,5 @@
 <template>
-    <img :src="'./assets/svgicon/' + code.toLowerCase() + '.svg'" :width="width" />
+    <img :src="'./assets/svgicon/' + code + '.svg'" :width="width" />
 </template>
 
 <script>

@@ -136,6 +136,8 @@ export default {
         };
     },
     mounted() {
+        console.log('MOUNTED');
+        Store.exchangeData = {};
         // setTimeout(()=>this.$f7router.navigate('/make-payment/8c89de41-9005-424e-85b2-6e7f87fdb767/'), 500);
         this.getFromCoinTikers();
         setInterval(()=> this.getTiker(), 10000);
@@ -171,6 +173,7 @@ export default {
             return coins.map(c => {
                 return {
                     code: c.buy_curency.code,
+                    currency_type: c.currency_type,
                     reserv_data: {
                         data: c.rate_data
                     }
@@ -233,7 +236,7 @@ export default {
                     Store.exchangeData.tiker = t;
                     this.$nextTick(()=>Store.exchangeData.rate = this.rate);
                 } else {
-                    Store.toast('Неустойчивое интернет соединение!');
+                    // Store.toast('Неустойчивое интернет соединение!');
                 }
             });
         },
