@@ -76,6 +76,7 @@
         <!-- СМЕНА КОИНА -->
         <f7-sheet :opened="isChangedCoin" @sheet:closed="isChangedCoin = false" swipe-to-close backdrop class="sheet-change-coin">
             <f7-page-content>
+               <div class="touch-close-line"></div>
                 <f7-block>
                     <div class="big bold">Выбор вылюты</div>
                     <div class="small">которую {{changedCoinType === 'from' ? 'отдаёте' : 'получаете'}}</div>
@@ -387,5 +388,17 @@ input {
     border-radius: 10px;
     background: #e2e2e4;
     padding: 15px;
+}
+
+.touch-line{
+
+}
+
+.touch-close-line {
+    margin: 5px auto;
+    height: 3px;
+    width: 100px;
+    border-radius: 50px;
+    background: #797988;
 }
 </style>
