@@ -279,7 +279,6 @@ export default {
         }
     },
     destroyed(){
-        console.log('DESTROYED')
         clearInterval(this.tikerTimer);
     }
 };
