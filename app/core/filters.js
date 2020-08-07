@@ -14,6 +14,15 @@ Vue.filter('msgtime', v => $u.unixToStringHM(v));
 Vue.filter('d_m_y', v => $u.unixToStringDMY(v));
 Vue.filter('h_m', v => $u.unixToStringHM(v));
 Vue.filter('status', v => $u.parseStatus(v));
+Vue.filter('leftTime', v => {
+    v += 1200;
+    if (v <= 0) {
+        return '00м:00с';
+    }
+    const min = Math.floor(v / 60);
+    const sec = Math.ceil(v - min * 60);
+    return `${$u.addZero(min)}м:${$u.addZero(sec)}c`;
+});
 Vue.filter('round', v => {
     if (!v) {
         return 0;

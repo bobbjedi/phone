@@ -1,6 +1,6 @@
 import exchange from '../components/exchange.vue';
 import enterPayData from '../components/enter-pay-data.vue';
-import makePayment from '../components/make-payment.vue';
+import order from '../components/order.vue';
 
 export default [{
     path: '/',
@@ -10,7 +10,7 @@ export default [{
     component: enterPayData,
 },
 {
-    path: '/make-payment/:orderUid',
-    component: makePayment,
+    path: '/order/:orderUid',
+    component: order,
 }
 ];

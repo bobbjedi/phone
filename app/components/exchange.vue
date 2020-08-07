@@ -22,7 +22,7 @@
             <div class="coin-exchange-block txt-white">
                 <div class="coin-path" @click="changeCoin('to')">
                     <div class="small">Получаете</div>
-                    <div class="currency-name mt5"> <coin-icon :code="toCoin" width="25" /><span class="ml5">{{toCoin}}</span><i class="ml5 fa fa-caret-down" aria-hidden="true"></i></div>
+                    <div class="currency-name mt5" v-show="toCoin"> <coin-icon :code="toCoin" width="25" /><span class="ml5">{{toCoin}}</span><i class="ml5 fa fa-caret-down" aria-hidden="true"></i></div>
                 </div>
                 <input class="big" type="number" v-model.number="toCoinAmount" :min="tiker.min_money2" :max="tiker.max_money2">
             </div>
@@ -52,7 +52,7 @@
                 <!-- HISTORY -->
                 <div class="orders-history-list" v-if="ordersHistory.length">
                     <div class="order-history-item txt-lightgrey" v-for="o in ordersHistory" :key="o.id"
-                    @click="$f7router.navigate('/make-payment/' + (o.uid || o.unique_id))">
+                    @click="$f7router.navigate('/order/' + (o.uid || o.unique_id))">
                         <div class="j-between big"><span>№{{o.id}}</span> <span>{{o.date_make_order * 1000 | d_m_y}}</span></div>
                         <div class="center big mt10 mb10 txt-grey">{{o.status | status}}</div>
                         <div class="j-around big">
@@ -139,9 +139,9 @@ export default {
     mounted() {
         console.log('MOUNTED');
         Store.exchangeData = {};
-        // setTimeout(()=>this.$f7router.navigate('/make-payment/8c89de41-9005-424e-85b2-6e7f87fdb767/'), 500);
+        // setTimeout(()=>this.$f7router.navigate('/order/8c89de41-9005-424e-85b2-6e7f87fdb767/'), 500);
         this.getFromCoinTikers();
-        this.tikerTimer = setInterval(()=> this.getTiker(), 10000);
+        this.tikerTimer = setInterval(()=> this.getTiker(true), 10000);
         const el = document.getElementById('scrollable-block-exchange');
         el.addEventListener('scroll', () => {
             if (el.scrollHeight - el.scrollTop - el.clientHeight < 2) {
@@ -208,9 +208,7 @@ export default {
             this.isChangedCoin = false;
         },
         getFromCoinTikers() {
-            this.$f7.dialog.preloader('Загрузка...');
-
-            console.log('this.curency', Store.curencyes, this.curency);
+            this.$f7.preloader.show();
             api('current', {
                 url: 'cashe/operations/' + this.fromCoin
             }, res => {
@@ -218,26 +216,31 @@ export default {
                     this.fromCoinTikers = res.data;
                     if (!res.data.some(c => c.buy_curency.code === this.toCoin)) {
                         this.toCoin = res.data[0].buy_curency.code;
-                    } else {
-                        this.getTiker();
                     }
+                    this.getTiker();
+                } else {
+                    this.$f7.preloader.hide();
+                    Store.toast('Ошибка сети');
                 }
             });
         },
-        getTiker() {
+        getTiker(isNotNeedReset) {
+            !isNotNeedReset && this.$f7.preloader.show();
             api('current', {
                 url: 'cashe/operations/detail/' + this.fromCoin + '/' + this.toCoin
             }, res => {
-                 this.$f7.dialog.close();
+               this.$f7.preloader.hide();
                 if (res.success) {
                     const t = res.data;
                     t.max_money2 = Math.min(t.buy_curency.reserv_data.data.value, t.max_money2);
                     this.tiker = t;
-                    this.toCoinAmount = t.min_money2 * 1.1;
-                    Store.exchangeData.tiker = t;
-                    this.$nextTick(()=>Store.exchangeData.rate = this.rate);
+                    if(!this.toCoinAmount || !isNotNeedReset){
+                        this.toCoinAmount = $u.round(t.min_money2 * 1.1, this.tiker.buy_curency.exponent);
+                        Store.exchangeData.tiker = t;
+                        this.$nextTick(()=>Store.exchangeData.rate = this.rate);
+                    }
                 } else {
-                    // Store.toast('Неустойчивое интернет соединение!');
+                    Store.toast('Ошибка сети!');
                 }
             });
         },

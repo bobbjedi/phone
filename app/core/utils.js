@@ -100,7 +100,8 @@ export default {
         default:
             return 'Неопределен';
         }
-    }
+    },
+    addZero
 };
 
 

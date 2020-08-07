@@ -50,7 +50,7 @@ export default {
             socket.send(JSON.stringify({ id: uid }));
             socket.on('status/' + uid, () => getOrderData(uid, processedOrder)); // обновляем
             console.log('set listenner', order.id);
-            listenOrders[order.id] = {id: order.id, socket};
+            listenOrders[order.id] = true;
         };
 
         getOrderData(uid, processedOrder);

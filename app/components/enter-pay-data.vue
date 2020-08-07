@@ -30,7 +30,7 @@
                         @input="fromAddress = $event.target.value"
                         ></f7-list-input>
                     <f7-list-input class="small" :value="toAddress" @input="toAddress = $event.target.value" :label="buyCurency.label_buy + ' ' + buyCurency.bestchange_code" type="text" :placeholder="buyCurency.exemple" validate :pattern="buyCurency.re" clear-button></f7-list-input>
-                    <f7-list-input class="small" readonly :value="email" @input="email = $event.target.value" placeholder="example@gmail.com" label="Ваш email" type="text" validate pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"></f7-list-input>
+                    <f7-list-input class="small" :readonly="isLogged" :value="email" @input="email = $event.target.value" placeholder="example@gmail.com" label="Ваш email" type="text" validate pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"></f7-list-input>
                 </f7-list>
                 <div class="center mt15 agree-exchange" @click="isAgree = !isAgree">
                     <f7-checkbox :checked="isAgree" class="md"></f7-checkbox> <span class="ml5">Я согласен с правилами обмена</span>
@@ -39,7 +39,7 @@
                 <span v-if="!tiker.turn_the_course">1 {{exchangeData.fromCoin}} = {{(tiker && tiker.exchange_rate) || 0 | format}} {{exchangeData.toCoin}}</span>
                 <span v-else>1 {{exchangeData.toCoin}} = {{(tiker && tiker.exchange_rate) || 0 | format}} {{exchangeData.fromCoin}}</span>
              </div>
-             <div class="button-wrapper mt10" block>
+             <div class="button-wrapper mt10">
                 <f7-button :class="{'disable-button': !isValidForm}" class="bg-blue" fill round @click="makePay()">Продолжить</f7-button>
             </div>
             </div>
@@ -81,6 +81,7 @@ export default {
     mounted() {
     },
     computed: {
+        isLogged: ()=> Store.isLogged,
         tiker: ()=> Store.exchangeData.tiker,
         isNeedSellAddress(){
             return this.sellCurency.isAskReqSell;
@@ -93,7 +94,6 @@ export default {
         },
         exchangeData: () => Store.exchangeData,
         isValidForm(){
-
             return this.sellCurency && this.fromAddress && this.isAgree
                 && new RegExp(this.sellCurency.re).test(this.fromAddress)
                 && /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/.test(this.email)
@@ -126,7 +126,7 @@ export default {
                         const order = res.data;
                         order._id = order.id;
                         Store.exchangeData.order = order;
-                        this.$f7router.navigate('/make-payment/' + order.uid);
+                        this.$f7router.navigate('/order/' + order.uid);
                         const orderDoc = new ordersDb(order, 1);
                         listenerOrders.addListenner(orderDoc);
                         Store.updateOrdersHistory();

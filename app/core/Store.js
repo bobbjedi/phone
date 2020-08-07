@@ -33,6 +33,11 @@ export default new Vue({
         nextPageHistoryLoad: 2,
         isNexPageLoaded: false
     },
+    computed: {
+        isLogged(){
+            return !!this.user.email;
+        }
+    },
     methods: {
         noty(subtitle, text, delay = 3){
             this.$f7.notification.create({
@@ -73,6 +78,10 @@ export default new Vue({
                 page = this.nextPageHistoryLoad;
             } else {
                 this.nextPageHistoryLoad = 2;
+            }
+
+            if (!this.ordersHistory.length){
+                page = 1;
             }
             console.log({page, nextPageHistoryLoad: this.nextPageHistoryLoad});
             api('ordersHistory', { page }, res => {
