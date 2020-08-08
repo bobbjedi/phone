@@ -10,6 +10,12 @@ export default new Vue({
         this.updateOrdersHistory();
         listenerOrders.init();
         window.Store = this;
+        document.addEventListener('backbutton', e =>{
+            e.preventDefault();
+            if (this.$f7.views.main.router.url !== '/'){
+                this.$f7.views.main.router.back();
+            }
+        }, false);
     },
     data: {
         exchangeData: {
