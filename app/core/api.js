@@ -2,40 +2,40 @@ import config from '../../config';
 import axios from 'axios';
 import auth from './auth';
 
-// const instance = axios.create({
-//     baseURL: config.domain + '/api/v1/',
-//     timeout: 5000
-// });
-
 /**
 * @param {String} action
 * @param {Object} data
 * @param {Function} cb
 */
-export default async (action, data, cb) => {
-    let {method, url, isJWT} = middlewares[action];
-    let headers;
-    if (method === 'get' && action !== 'current'){
-        url += objToGet(data);
-        data = false;
-    }
-    if (action === 'current') {
-        url = data.url;
-    }
-    if (isJWT) {
-        await auth.refreshTokensIfNeeded(); // TODO: чек протухшего токена
-        headers = { Authorization: 'Token ' + auth.tokens.access };
-    }
-    url = config.domain + '/api/v1/' + url;
-    // console.log('>>', url);
-    axios({ url, method, data, headers}).then(res => {
+
+async function api(action, data, cb) {
+    try {
+        let {method, url, isJWT} = middlewares[action];
+        let headers;
+        if (method === 'get' && action !== 'current'){
+            url += objToGet(data);
+            data = false;
+        }
+        if (action === 'current') {
+            url = data.url;
+        }
+        if (isJWT) {
+            headers = { Authorization: 'Token ' + auth.tokens.access };
+        }
+        url = config.domain + '/api/v1/' + url;
+        // console.log('>>', url);
+        axios({ url, method, data, headers}).then(res => {
         // console.log(action, res.status, res);
-        res.success = true;
-        cb(res);
-    }).catch(e => {
-        console.log('Api error', action, '<', e);
+            res.success = true;
+            cb(res);
+        }).catch(e => {
+            console.log('Api error', action, '<', e);
+            cb({success: false});
+        });
+    } catch (e) {
+        console.log('Api error:', e);
         cb({success: false});
-    });
+    }
 };
 
 const middlewares = {
@@ -48,5 +48,7 @@ const middlewares = {
     tikers: {url: 'exchange.xml', method: 'get'},
     current: { method: 'get' }
 };
+
+export default api;
 
 const objToGet = obj => Object.keys(obj).reduce((s, k) => s + k + '=' + obj[k] + '&', '?');
