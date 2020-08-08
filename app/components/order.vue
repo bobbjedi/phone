@@ -163,6 +163,7 @@ export default {
         this.updateOrderData();
         Store.$on('update_' + this.orderUid, () => this.updateOrderData());
         this.timeOutLeftTime = setInterval(() => this.timeLeft--, 1000);
+        this.$f7.views.main.buttonBack = ()=> this.goMainPage();
     },
     computed: {
         isNeedSellAddress() {

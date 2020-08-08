@@ -2,20 +2,28 @@ import Vue from 'vue';
 import api from './api';
 import _ from 'underscore';
 import listenerOrders from './listenerOrders';
+import auth from './auth';
 
 export default new Vue({
     async created() {
+        auth.init(api, this);
         Vue.prototype.navigate = v => this.$f7router.navigate(v);
         this.getCurencyesData();
         this.updateOrdersHistory();
         listenerOrders.init();
         window.Store = this;
-        document.addEventListener('backbutton', e =>{
-            e.preventDefault();
-            if (this.$f7.views.main.router.url !== '/'){
-                this.$f7.views.main.router.back();
-            }
+
+        document.addEventListener('deviceready', ()=>{
+            document.addEventListener('backbutton', e => {
+                alert('BACK BUTTON');
+                if (this.$f7.views.main.router.url !== '/'){
+                    e.preventDefault();
+                    this.$f7.views.main.buttonBack && this.$f7.views.main.buttonBack ||
+                    this.$f7.views.main.router.back();
+                }
+            }, false);
         }, false);
+
     },
     data: {
         exchangeData: {
@@ -29,9 +37,8 @@ export default new Vue({
         globalRouter: {},
         user: {
             email_validated: false,
-            userName: '',
-            email: '',
-            isLogged: false
+            username: '',
+            email: ''
         },
         curencyes: [],
         tikers: [],
@@ -63,9 +70,17 @@ export default new Vue({
                 closeTimeout: 2000
             }).open();
         },
+        login({email, username, email_validated}){
+            console.log('Login', {email, username, email_validated});
+            this.user.email = email;
+            this.user.username = username;
+            this.user.email_validated = email_validated;
+        },
         logOut() {
-            this.user.isLogged = false;
-            this.tokens = false;
+            this.user.email = '';
+            this.user.username = '';
+            this.user.email_validated = false;
+            auth.logOut();
         },
         getCurencyesData(){
             api('curencyes', {}, res => {

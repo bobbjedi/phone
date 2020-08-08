@@ -16,7 +16,7 @@
         <i class="fa fa-commenting-o bigbig" aria-hidden="true"></i>
         <span class="small">Поддержка</span>
     </div>
-    <div class="bottom-menu-item" @click="openLoginForm">
+    <div class="bottom-menu-item" @click="openProfile">
         <i class="fa fa-user bigbig" aria-hidden="true"></i>
         <span class="small">Профиль</span>
     </div>
@@ -27,8 +27,12 @@
 import Store from "../core/Store";
 export default {
     methods: {
-        openLoginForm() {
-            Store.$emit('openLoginForm');
+        openProfile() {
+            if(!Store.isLogged) {
+                Store.$emit('openLoginForm');
+            } else {
+                this.$f7router.navigate('/profile');
+            }
         }
     }
 };

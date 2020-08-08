@@ -75,16 +75,12 @@ export default {
             this.$f7.preloader.show();
             api(action, data, res => {
                 if (res.success) {
-                    const {email, username, access, refresh, tokens} = res.data;
-                    Store.user.email = email;
-                    Store.user.userName = username;
-                    Store.user.isLogged = true;
-                    const savedTokens = tokens || {access, refresh};
-                    console.log('SAVED', savedTokens);
-                    savedTokens.jwtInfo = this.password; // очень плохо ((
-                    auth.setTokens(savedTokens); // для реги tokens, для логина {access, refresh}
+                    res.data.tokens.jwtInfo = this.password; // очень плохо ((
+                    res.data.tokens.username = res.data.username;
+                    auth.setTokens(res.data.tokens);
+                    Store.login(res.data);
                     app.loginScreen.close();
-                    Store.noty("Успешный вход!", "Здравcтсвуйте, " + username + "!");
+                    Store.noty("Успешный вход!", "Здравcтсвуйте, " + res.data.username + "!");
                     this.$f7.preloader.hide();
                 } else {
                     alert('ERROR ' + res.status);
