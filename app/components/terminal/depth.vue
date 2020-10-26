@@ -4,7 +4,7 @@
            <span>Price</span> {{pairName}} <span>Amount</span>
         </div>
         <div class="depth-path depth-sell">
-            <div class="sell-line price-line" 
+            <div class="sell-line price-line"
                  v-for="p in prices.sell"
                  :key="p"
                  :style="{background: 'linear-gradient(to left, rgb(232, 153, 150) ' + mathPercent(sell[p]) + '%, rgba(0,0,0,0) ' + mathPercent(sell[p]) + '%, rgba(0,0,0,0) ' + (100 - mathPercent(sell[p])) + '%)'}"
@@ -63,6 +63,7 @@ export default {
     },
     methods: {
         mathPercent(value) {
+            console.log(value, this.maxValue);
             return value / this.maxValue * 100;
         },
         updateDepthData(){

@@ -102,10 +102,10 @@ export default {
             return Store.terminalPair
         },
         limits() {
-            return config.coinsTradeLimits[this.altCoin] || {};
+            return config.coinsTradeLimits[this.altCoin] || {min: 1, max: 10000};
         },
         steps() {
-            return config.tradeSteps[this.pairName] || {};
+            return config.tradeSteps[this.pairName] || {price: 1, amount: 1};
         },
         deposits: () => Store.user.deposits || {},
         isValid() {
@@ -163,9 +163,9 @@ export default {
         },
         setPercent(p){
             if(this.orderType === 'sell'){
-                this.altAmount = $u.round(this.deposits[this.altCoin].free * p / 100); 
+                this.altAmount = $u.round(this.deposits[this.altCoin].free * p / 100);
             } else {
-                this.altAmount = $u.round(this.deposits[this.baseCoin].free * p / 100 / this.price); 
+                this.altAmount = $u.round(this.deposits[this.baseCoin].free * p / 100 / this.price);
             }
         },
         /**
